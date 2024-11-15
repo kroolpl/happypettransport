@@ -57,7 +57,7 @@ const testimonials = [
 
   <main>
     <!-- Hero Section -->
-    <section class="relative bg-gradient-to-br from-myrtle/90 to-cadet/90 text-white py-16 md:py-24 overflow-hidden">
+    <section class="relative bg-gradient-to-br from-myrtle/90 to-cadet/90 text-white pt-28 pb-16 md:py-24 overflow-hidden">
       <!-- Background Image -->
       <div class="absolute inset-0 -z-10">
         <Image
@@ -156,7 +156,7 @@ const testimonials = [
         <!-- Desktop Grid -->
         <div class="hidden md:grid md:grid-cols-3 gap-8">
           {testimonials.map((testimonial, index) => (
-            <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] animate-slide-up relative" style={`animation-delay: ${index * 200}ms`}>
+            <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] animate-slide-up relative mt-10" style={`animation-delay: ${index * 200}ms`}>
               <div class="absolute -top-10 left-1/2 -translate-x-1/2 w-20 h-20 rounded-full border-4 border-white shadow-lg overflow-hidden">
                 <Image
                   src={testimonial.image}
@@ -193,7 +193,7 @@ const testimonials = [
             <div id="testimonialSlider" class="flex transition-transform duration-300 ease-out">
               {testimonials.map((testimonial, index) => (
                 <div class="w-full flex-shrink-0 px-4">
-                  <div class="bg-white p-6 rounded-xl shadow-lg relative">
+                  <div class="bg-white p-6 rounded-xl shadow-lg relative mt-10">
                     <div class="absolute -top-10 left-1/2 -translate-x-1/2 w-20 h-20 rounded-full border-4 border-white shadow-lg overflow-hidden">
                       <Image
                         src={testimonial.image}
