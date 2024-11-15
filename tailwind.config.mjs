@@ -44,6 +44,10 @@ export default {
           '25%': { transform: 'translateX(2px) rotate(1deg)' },
           '75%': { transform: 'translateX(-2px) rotate(-1deg)' },
           '100%': { transform: 'translateX(0) rotate(0deg)' },
+        },
+        'float-subtle': {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-5px)' }
         }
       },
       animation: {
@@ -54,6 +58,7 @@ export default {
         'driving': 'drive 3s ease-in-out infinite',
         'floating': 'float 3s ease-in-out infinite',
         'pop-up': 'pop-up 0.3s ease-out forwards',
+        'floating-subtle': 'float-subtle 3s ease-in-out infinite'
       },
     },
   },
