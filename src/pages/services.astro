@@ -1,0 +1,146 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { Image } from 'astro:assets';
+import heroImage from '../assets/pets.jpeg';
+
+const services = [
+  {
+    id: 'international',
+    title: 'International Pet Transport',
+    price: 'From £500',
+    description: 'Door-to-door pet transport service across Europe, including UK and Poland. Complete with all necessary documentation and health checks.',
+    features: [
+      'Door-to-door service',
+      'Full documentation assistance',
+      'Health check coordination',
+      'GPS tracking available',
+      'Regular photo updates',
+      'Comfort stops included'
+    ]
+  },
+  {
+    id: 'domestic',
+    title: 'Domestic Transport',
+    price: 'From £200',
+    description: 'Safe and comfortable pet transport within country borders. Perfect for relocations or long-distance moves.',
+    features: [
+      'Same-day delivery possible',
+      'Flexible scheduling',
+      'Direct routes',
+      'Climate controlled vehicle',
+      'Individual attention',
+      'Door-to-door service'
+    ]
+  },
+  {
+    id: 'express',
+    title: 'Express Service',
+    price: 'From £700',
+    description: 'Priority pet transport service with minimal stops and fastest possible delivery times while maintaining comfort.',
+    features: [
+      'Priority handling',
+      'Minimal transit time',
+      'Direct transport',
+      'Real-time updates',
+      'Premium vehicle fleet',
+      '24/7 support included'
+    ]
+  },
+  {
+    id: 'specialized',
+    title: 'Specialized Care Transport',
+    price: 'Custom Quote',
+    description: 'Tailored transport solutions for pets with special needs, elderly pets, or those requiring extra attention.',
+    features: [
+      'Veterinary coordination',
+      'Medical equipment available',
+      'Extra comfort measures',
+      'Frequent rest stops',
+      'Temperature monitoring',
+      'Special diet accommodation'
+    ]
+  }
+];
+---
+
+<Layout 
+  title="Pet Transport Services | Happy Pet Transport"
+  description="Comprehensive pet transport services across Europe - including international, domestic, and specialized care options."
+>
+  <main class="pt-20">
+    <!-- Hero Section -->
+    <section class="relative bg-gradient-to-br from-myrtle/90 to-cadet/90 text-white py-16 md:py-24 overflow-hidden">
+      <div class="absolute inset-0 -z-10">
+        <Image
+          src={heroImage}
+          alt=""
+          class="w-full h-full object-cover opacity-20"
+          quality="low"
+        />
+      </div>
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+        <div class="max-w-3xl mx-auto text-center">
+          <h1 class="font-heading text-4xl md:text-5xl font-bold mb-6 animate-slide-up">
+            Our Transport Services
+          </h1>
+          <p class="text-lg mb-8 text-gray-100 animate-slide-up [animation-delay:200ms]">
+            Choose from our range of professional pet transport services, each designed to provide maximum comfort and safety for your beloved pets.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Services Grid -->
+    <section class="py-16 md:py-24">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+          {services.map((service, index) => (
+            <div class={`bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] animate-slide-up`} style={`animation-delay: ${index * 100}ms`}>
+              <div class="flex justify-between items-start mb-6">
+                <h2 class="font-heading text-2xl font-bold text-cadet">{service.title}</h2>
+                <span class="bg-accent/10 text-accent px-4 py-1 rounded-full text-sm font-semibold">
+                  {service.price}
+                </span>
+              </div>
+              <p class="text-slate mb-6">{service.description}</p>
+              <ul class="space-y-3">
+                {service.features.map((feature) => (
+                  <li class="flex items-center text-slate">
+                    <svg class="h-5 w-5 text-accent mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                    {feature}
+                  </li>
+                ))}
+              </ul>
+              <div class="mt-8">
+                <a 
+                  href={`/contact?service=${service.id}`}
+                  class="inline-block bg-accent text-white px-6 py-2 rounded-lg font-semibold hover:bg-accent/90 transition-all duration-300 hover:scale-105 transform"
+                >
+                  Get Quote
+                </a>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="bg-gradient-to-r from-myrtle to-cadet py-16 relative overflow-hidden">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative">
+        <h2 class="font-heading text-3xl font-bold mb-6 text-white">Need a Custom Solution?</h2>
+        <p class="text-lg text-gray-100 mb-8 max-w-2xl mx-auto">
+          Contact us to discuss your specific requirements. We'll create a tailored transport plan for your pet.
+        </p>
+        <a 
+          href="/contact" 
+          class="inline-block bg-accent text-white px-8 py-3 rounded-lg font-semibold hover:bg-accent/90 transition-all duration-300 hover:scale-105 transform"
+        >
+          Contact Us
+        </a>
+      </div>
+    </section>
+  </main>
+</Layout> 

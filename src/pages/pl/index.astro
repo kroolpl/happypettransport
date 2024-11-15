@@ -1,0 +1,295 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { Image } from 'astro:assets';
+
+// Import hero image
+import heroImage from '../../assets/pets.jpeg';
+
+// Import all testimonial images
+import lunaImage from '../../assets/testimonials/luna.jpg';
+import maxImage from '../../assets/testimonials/max.jpg';
+import bellaImage from '../../assets/testimonials/bella.jpg';
+
+// Add structured data for SEO
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "name": "Happy Pet Transport",
+  "description": "Profesjonalny transport zwierząt w UK, Polsce i UE",
+  "provider": {
+    "@type": "Organization",
+    "name": "Happy Pet Transport"
+  },
+  "areaServed": {
+    "@type": "Continent",
+    "name": "Europe"
+  }
+};
+
+const testimonials = [
+  {
+    name: 'Luna',
+    image: lunaImage,
+    role: 'Owczarek Niemiecki, UK do Polski',
+    quote: 'Ludzie byli tacy mili! Dostawałam smakołyki i głaskanie podczas przerw. Najlepsza podróż w życiu! 🦴'
+  },
+  {
+    name: 'Max',
+    image: maxImage,
+    role: 'Brytyjczyk, Polska do Niemiec',
+    quote: 'Przespałem większość podróży w moim wygodnym transporterze, a klimatyzacja była idealna! 😺'
+  },
+  {
+    name: 'Bella',
+    image: bellaImage,
+    role: 'Golden Retriever, Francja do UK',
+    quote: 'Poznałam tylu przyjaciół podczas postojów! Pozwolili mi nawet zatrzymać moją ulubioną zabawkę. Super obsługa! 🎾'
+  }
+];
+---
+
+<Layout 
+  title="Happy Pet Transport - Bezpieczny Transport Zwierząt w Europie"
+  description="Profesjonalny transport zwierząt między UK, Polską i krajami UE. Licencjonowani, ubezpieczeni, skupieni na komforcie i bezpieczeństwie zwierząt."
+>
+  <!-- Add structured data -->
+  <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+
+  <main>
+    <!-- Hero Section -->
+    <section class="relative bg-gradient-to-br from-myrtle/90 to-cadet/90 text-white py-16 md:py-24 overflow-hidden">
+      <!-- Background Image -->
+      <div class="absolute inset-0 -z-10">
+        <Image
+          src={heroImage}
+          alt=""
+          class="w-full h-full object-cover opacity-20"
+          quality="low"
+        />
+      </div>
+
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
+          <div class="animate-slide-up">
+            <span class="bg-accent/20 text-white px-4 py-1 rounded-full text-sm font-semibold mb-6 inline-block hover:bg-accent/30 transition-colors cursor-default">
+              Zaufany Transport Zwierząt
+            </span>
+            <h1 class="font-heading text-4xl md:text-5xl font-bold mb-6">
+              Bezpieczny i Komfortowy Transport Zwierząt w Europie
+            </h1>
+            <p class="text-lg mb-8 text-gray-100">
+              Specjalizujemy się w transporcie zwierząt między UK, Polską i krajami UE. Komfort i bezpieczeństwo Twojego pupila to nasz priorytet.
+            </p>
+            <div class="flex gap-4">
+              <a href="/pl/kontakt" class="bg-accent text-white px-8 py-3 rounded-lg font-semibold hover:bg-accent/90 transition-all duration-300 hover:scale-105 transform animate-breath">
+                Wycena
+              </a>
+              <a href="/pl/uslugi" class="border-2 border-accent text-white px-8 py-3 rounded-lg font-semibold hover:bg-accent hover:border-accent transition-all duration-300 hover:scale-105 transform">
+                Dowiedz się więcej
+              </a>
+            </div>
+          </div>
+          
+          <div class="relative h-[300px] md:h-[500px] md:block animate-float">
+            <div class="absolute inset-0 bg-accent/20 rounded-lg transform rotate-6 transition-transform duration-700 hover:rotate-12"></div>
+            <Image
+              src={heroImage}
+              alt="Szczęśliwe zwierzęta gotowe do bezpiecznego transportu po Europie"
+              class="absolute inset-0 w-full h-full object-cover rounded-lg shadow-xl transform -rotate-3 hover:rotate-0 transition-all duration-700 hover:scale-105"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-16 md:py-24" aria-labelledby="features-heading">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16 animate-slide-up">
+          <span class="bg-accent/10 text-accent px-4 py-1 rounded-full text-sm font-semibold mb-4 inline-block hover:bg-accent/20 transition-colors cursor-default">
+            Dlaczego My
+          </span>
+          <h2 id="features-heading" class="font-heading text-3xl font-bold text-cadet">Co Nas Wyróżnia</h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 transform animate-slide-up">
+            <div class="w-14 h-14 bg-accent/10 rounded-full flex items-center justify-center mb-6 animate-pulse-soft">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <h3 class="font-heading text-xl font-bold mb-3 text-cadet">Licencja i Ubezpieczenie</h3>
+            <p class="text-slate">Pełna zgodność ze wszystkimi przepisami UE dotyczącymi transportu zwierząt oraz wymogami ubezpieczeniowymi.</p>
+          </div>
+          <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 transform animate-slide-up [animation-delay:200ms]">
+            <div class="w-14 h-14 bg-accent/10 rounded-full flex items-center justify-center mb-6 animate-pulse-soft">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <h3 class="font-heading text-xl font-bold mb-3 text-cadet">Wsparcie 24/7</h3>
+            <p class="text-slate">Bądź na bieżąco z podróżą swojego pupila dzięki całodobowej obsłudze klienta.</p>
+          </div>
+          <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 transform animate-slide-up [animation-delay:400ms]">
+            <div class="w-14 h-14 bg-accent/10 rounded-full flex items-center justify-center mb-6 animate-pulse-soft">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+              </svg>
+            </div>
+            <h3 class="font-heading text-xl font-bold mb-3 text-cadet">Komfort Zwierząt</h3>
+            <p class="text-slate">Klimatyzowane pojazdy i regularne przerwy dla dobrego samopoczucia Twojego pupila.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="py-16 md:py-24 bg-slate/5">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16 animate-slide-up">
+          <span class="bg-accent/10 text-accent px-4 py-1 rounded-full text-sm font-semibold mb-4 inline-block hover:bg-accent/20 transition-colors cursor-default">
+            Opinie Naszych Pupili
+          </span>
+          <h2 class="font-heading text-3xl font-bold text-cadet">Co Mówią Nasi Futrzani Klienci</h2>
+        </div>
+
+        <!-- Desktop Grid -->
+        <div class="hidden md:grid md:grid-cols-3 gap-8">
+          {testimonials.map((testimonial, index) => (
+            <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] animate-slide-up relative" style={`animation-delay: ${index * 200}ms`}>
+              <div class="absolute -top-10 left-1/2 -translate-x-1/2 w-20 h-20 rounded-full border-4 border-white shadow-lg overflow-hidden">
+                <Image
+                  src={testimonial.image}
+                  alt={`Zdjęcie ${testimonial.name}`}
+                  class="w-full h-full object-cover"
+                  width={80}
+                  height={80}
+                  quality="high"
+                />
+              </div>
+              <div class="pt-12">
+                <p class="text-slate italic mb-4">"{testimonial.quote}"</p>
+                <div class="flex justify-between items-center border-t border-slate/10 pt-4">
+                  <div>
+                    <p class="font-heading font-bold text-cadet">{testimonial.name}</p>
+                    <p class="text-sm text-slate">{testimonial.role}</p>
+                  </div>
+                  <div class="flex gap-1">
+                    {Array(5).fill('').map(() => (
+                      <svg class="w-5 h-5 text-accent" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                      </svg>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <!-- Mobile Carousel -->
+        <div class="md:hidden relative">
+          <div class="overflow-hidden">
+            <div id="testimonialSlider" class="flex transition-transform duration-300 ease-out">
+              {testimonials.map((testimonial, index) => (
+                <div class="w-full flex-shrink-0 px-4">
+                  <div class="bg-white p-6 rounded-xl shadow-lg relative">
+                    <div class="absolute -top-10 left-1/2 -translate-x-1/2 w-20 h-20 rounded-full border-4 border-white shadow-lg overflow-hidden">
+                      <Image
+                        src={testimonial.image}
+                        alt={`Zdjęcie ${testimonial.name}`}
+                        class="w-full h-full object-cover"
+                        width={80}
+                        height={80}
+                        quality="high"
+                      />
+                    </div>
+                    <div class="pt-12">
+                      <p class="text-slate italic mb-4">"{testimonial.quote}"</p>
+                      <div class="flex justify-between items-center border-t border-slate/10 pt-4">
+                        <div>
+                          <p class="font-heading font-bold text-cadet">{testimonial.name}</p>
+                          <p class="text-sm text-slate">{testimonial.role}</p>
+                        </div>
+                        <div class="flex gap-1">
+                          {Array(5).fill('').map(() => (
+                            <svg class="w-5 h-5 text-accent" fill="currentColor" viewBox="0 0 20 20">
+                              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                            </svg>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <!-- Carousel Controls -->
+          <div class="flex justify-center items-center mt-8 gap-4">
+            <button 
+              id="prevSlide"
+              class="p-2 rounded-full bg-white shadow-md text-accent hover:bg-accent hover:text-white transition-colors duration-300"
+              aria-label="Poprzednia opinia"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+
+            <!-- Dots -->
+            <div class="flex gap-2" id="slideDots">
+              {testimonials.map((_, index) => (
+                <button
+                  class={`w-2 h-2 rounded-full transition-all duration-300 ${index === 0 ? 'bg-accent w-4' : 'bg-accent/30'}`}
+                  aria-label={`Przejdź do opinii ${index + 1}`}
+                  data-index={index}
+                />
+              ))}
+            </div>
+
+            <button 
+              id="nextSlide"
+              class="p-2 rounded-full bg-white shadow-md text-accent hover:bg-accent hover:text-white transition-colors duration-300"
+              aria-label="Następna opinia"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="bg-gradient-to-r from-myrtle to-cadet py-16 md:py-24 relative overflow-hidden" aria-labelledby="cta-heading">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative animate-slide-up">
+        <span class="bg-accent/20 text-white px-4 py-1 rounded-full text-sm font-semibold mb-6 inline-block hover:bg-accent/30 transition-colors cursor-default">
+          Rozpocznij
+        </span>
+        <h2 id="cta-heading" class="font-heading text-3xl font-bold mb-6 text-white">Gotowy na Transport Swojego Pupila?</h2>
+        <p class="text-lg text-gray-100 mb-8 max-w-2xl mx-auto">
+          Skontaktuj się z nami, aby otrzymać spersonalizowaną wycenę. Zadbamy o podróż Twojego pupila z najwyższą starannością i profesjonalizmem.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a 
+            href="/pl/contact" 
+            class="bg-accent text-white px-8 py-3 rounded-lg font-semibold hover:bg-accent/90 transition-all duration-300 hover:scale-105 transform focus:ring-2 focus:ring-offset-2 focus:ring-accent focus:outline-none"
+          >
+            Kontakt
+          </a>
+          <a 
+            href="/pl/uslugi" 
+            class="border-2 border-accent text-white px-8 py-3 rounded-lg font-semibold hover:bg-accent hover:border-accent transition-all duration-300 hover:scale-105 transform focus:ring-2 focus:ring-offset-2 focus:ring-accent focus:outline-none"
+          >
+            Nasze Usługi
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<!-- ... carousel script remains the same ... --> 

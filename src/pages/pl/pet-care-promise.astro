@@ -1,0 +1,162 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { Image } from 'astro:assets';
+import heroImage from '../../assets/pets.jpeg';
+
+const promises = [
+  {
+    id: 'safety',
+    title: 'Bezpieczeństwo Przede Wszystkim',
+    icon: 'shield-check',
+    description: 'Nasz zespół jest przeszkolony w zakresie bezpieczeństwa i transportu zwierząt, zapewniając, że każda podróż jest tak bezpieczna i komfortowa, jak to możliwe.',
+    details: [
+      'Certyfikowany personel z pierwszą pomocą',
+      'Kompleksowe protokoły bezpieczeństwa',
+      'Regularne kontrole pojazdów',
+      'Współpraca z organizacjami ochrony zwierząt'
+    ]
+  },
+  {
+    id: 'climate',
+    title: 'Kontrola Klimatu',
+    icon: 'sun',
+    description: 'Nasze pojazdy są wyposażone w najnowocześniejsze systemy klimatyzacji, utrzymujące optymalną temperaturę niezależnie od warunków zewnętrznych.',
+    details: [
+      'Stałe monitorowanie temperatury',
+      'Zaawansowany system filtracji powietrza',
+      'Odpowiednia wentylacja',
+      'Dostosowanie do warunków pogodowych'
+    ]
+  },
+  {
+    id: 'breaks',
+    title: 'Regularne Przerwy',
+    icon: 'clock',
+    description: 'Robimy regularne postoje co 2-3 godziny, dając Twojemu pupilowi szansę na rozprostowanie łap, napicie się wody i świeże powietrze.',
+    details: [
+      'Zaplanowane przerwy na odpoczynek',
+      'Stały dostęp do świeżej wody',
+      'Możliwość ćwiczeń',
+      'Indywidualny harmonogram przerw'
+    ]
+  },
+  {
+    id: 'attention',
+    title: 'Indywidualna Opieka',
+    icon: 'heart',
+    description: 'Zapewniamy przestronne, bezpieczne boksy zaprojektowane z myślą o komforcie i prywatności każdego zwierzaka.',
+    details: [
+      'Przestronne indywidualne boksy',
+      'Możliwość zabrania ulubionej zabawki',
+      'Spersonalizowane podejście',
+      'Środowisko minimalizujące stres'
+    ]
+  },
+  {
+    id: 'monitoring',
+    title: 'Monitoring Zdrowia',
+    icon: 'activity',
+    description: 'Podczas podróży nasz zespół regularnie sprawdza stan każdego zwierzaka, monitorując oznaki stresu lub dyskomfortu.',
+    details: [
+      'Regularne kontrole stanu zdrowia',
+      'Monitoring zachowania',
+      'Ocena poziomu stresu',
+      'Natychmiastowa reakcja na problemy'
+    ]
+  },
+  {
+    id: 'emergency',
+    title: 'Gotowość Awaryjna',
+    icon: 'alert-circle',
+    description: 'Nasze pojazdy są wyposażone w zestawy awaryjne, a zespół jest przygotowany na każdą sytuację. Mamy sieć weterynarzy wzdłuż naszych tras.',
+    details: [
+      'Pełny zestaw awaryjny na pokładzie',
+      'Dostęp do sieci weterynarzy',
+      'Protokoły awaryjne',
+      'Wsparcie 24/7'
+    ]
+  }
+];
+---
+
+<Layout 
+  title="Nasza Obietnica | Happy Pet Transport"
+  description="Poznaj naszą kompleksową obietnicę opieki nad zwierzętami - zapewniamy bezpieczny, komfortowy i wolny od stresu transport dla Twoich pupili w całej Europie."
+>
+  <main class="pt-20">
+    <!-- Hero Section -->
+    <section class="relative bg-gradient-to-br from-myrtle/90 to-cadet/90 text-white py-16 md:py-24 overflow-hidden">
+      <div class="absolute inset-0 -z-10">
+        <Image
+          src={heroImage}
+          alt=""
+          class="w-full h-full object-cover opacity-20"
+          quality="low"
+        />
+      </div>
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+        <div class="max-w-3xl mx-auto text-center">
+          <h1 class="font-heading text-4xl md:text-5xl font-bold mb-6 animate-slide-up">
+            Nasza Obietnica Opieki
+          </h1>
+          <p class="text-lg mb-8 text-gray-100 animate-slide-up [animation-delay:200ms]">
+            Bezpieczeństwo, komfort i dobre samopoczucie Twojego pupila są naszymi priorytetami. Każda podróż jest planowana z troską, realizowana z doświadczeniem i monitorowana z oddaniem.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Promises Grid -->
+    <section class="py-16 md:py-24">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+          {promises.map((promise, index) => (
+            <div class={`bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] animate-slide-up`} style={`animation-delay: ${index * 100}ms`}>
+              <div class="w-14 h-14 bg-accent/10 rounded-full flex items-center justify-center mb-6">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <h2 class="font-heading text-2xl font-bold mb-4 text-cadet">{promise.title}</h2>
+              <p class="text-slate mb-6">{promise.description}</p>
+              <ul class="space-y-3">
+                {promise.details.map((detail) => (
+                  <li class="flex items-center text-slate">
+                    <svg class="h-5 w-5 text-accent mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                    {detail}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="bg-gradient-to-r from-myrtle to-cadet py-16 relative overflow-hidden">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative">
+        <h2 class="font-heading text-3xl font-bold mb-6 text-white">Gotowy na Transport Swojego Pupila?</h2>
+        <p class="text-lg text-gray-100 mb-8 max-w-2xl mx-auto">
+          Doświadcz różnicy, jaką daje prawdziwie troskliwy transport zwierząt. Skontaktuj się z nami, aby omówić podróż Twojego pupila.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a 
+            href="/pl/contact" 
+            class="bg-accent text-white px-8 py-3 rounded-lg font-semibold hover:bg-accent/90 transition-all duration-300 hover:scale-105 transform"
+          >
+            Kontakt
+          </a>
+          <a 
+            href="/pl/uslugi" 
+            class="border-2 border-accent text-white px-8 py-3 rounded-lg font-semibold hover:bg-accent hover:border-accent transition-all duration-300 hover:scale-105 transform"
+          >
+            Nasze Usługi
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout> 

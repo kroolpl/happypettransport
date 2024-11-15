@@ -1,0 +1,146 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { Image } from 'astro:assets';
+import heroImage from '../../assets/pets.jpeg';
+
+const services = [
+  {
+    id: 'international',
+    title: 'Transport Międzynarodowy',
+    price: 'Od 500£',
+    description: 'Transport zwierząt od drzwi do drzwi w całej Europie, w tym UK i Polsce. Kompletna dokumentacja i kontrole zdrowia.',
+    features: [
+      'Usługa od drzwi do drzwi',
+      'Pomoc w dokumentacji',
+      'Koordynacja badań',
+      'Śledzenie GPS',
+      'Regularne zdjęcia',
+      'Przerwy na odpoczynek'
+    ]
+  },
+  {
+    id: 'domestic',
+    title: 'Transport Krajowy',
+    price: 'Od 200£',
+    description: 'Bezpieczny i komfortowy transport zwierząt w granicach kraju. Idealny przy przeprowadzkach lub dalekich podróżach.',
+    features: [
+      'Dostawa tego samego dnia',
+      'Elastyczne planowanie',
+      'Bezpośrednie trasy',
+      'Klimatyzowany pojazd',
+      'Indywidualna opieka',
+      'Usługa od drzwi do drzwi'
+    ]
+  },
+  {
+    id: 'express',
+    title: 'Usługa Express',
+    price: 'Od 700£',
+    description: 'Priorytetowy transport zwierząt z minimalnymi postojami i najkrótszym możliwym czasem dostawy przy zachowaniu komfortu.',
+    features: [
+      'Priorytetowa obsługa',
+      'Minimalny czas tranzytu',
+      'Transport bezpośredni',
+      'Aktualizacje na żywo',
+      'Premium flota pojazdów',
+      'Wsparcie 24/7'
+    ]
+  },
+  {
+    id: 'specialized',
+    title: 'Transport Specjalistyczny',
+    price: 'Wycena Indywidualna',
+    description: 'Dostosowane rozwiązania transportowe dla zwierząt wymagających szczególnej opieki, starszych lub potrzebujących dodatkowej uwagi.',
+    features: [
+      'Koordynacja weterynaryjna',
+      'Dostępny sprzęt medyczny',
+      'Dodatkowe środki komfortu',
+      'Częste postoje',
+      'Monitoring temperatury',
+      'Specjalna dieta'
+    ]
+  }
+];
+---
+
+<Layout 
+  title="Usługi Transportu Zwierząt | Happy Pet Transport"
+  description="Kompleksowe usługi transportu zwierząt w Europie - w tym międzynarodowy, krajowy i specjalistyczny transport."
+>
+  <main class="pt-20">
+    <!-- Hero Section -->
+    <section class="relative bg-gradient-to-br from-myrtle/90 to-cadet/90 text-white py-16 md:py-24 overflow-hidden">
+      <div class="absolute inset-0 -z-10">
+        <Image
+          src={heroImage}
+          alt=""
+          class="w-full h-full object-cover opacity-20"
+          quality="low"
+        />
+      </div>
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+        <div class="max-w-3xl mx-auto text-center">
+          <h1 class="font-heading text-4xl md:text-5xl font-bold mb-6 animate-slide-up">
+            Nasze Usługi Transportowe
+          </h1>
+          <p class="text-lg mb-8 text-gray-100 animate-slide-up [animation-delay:200ms]">
+            Wybierz spośród naszych profesjonalnych usług transportu zwierząt, każda zaprojektowana z myślą o maksymalnym komforcie i bezpieczeństwie Twoich pupili.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Services Grid -->
+    <section class="py-16 md:py-24">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+          {services.map((service, index) => (
+            <div class={`bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] animate-slide-up`} style={`animation-delay: ${index * 100}ms`}>
+              <div class="flex justify-between items-start mb-6">
+                <h2 class="font-heading text-2xl font-bold text-cadet">{service.title}</h2>
+                <span class="bg-accent/10 text-accent px-4 py-1 rounded-full text-sm font-semibold">
+                  {service.price}
+                </span>
+              </div>
+              <p class="text-slate mb-6">{service.description}</p>
+              <ul class="space-y-3">
+                {service.features.map((feature) => (
+                  <li class="flex items-center text-slate">
+                    <svg class="h-5 w-5 text-accent mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                    {feature}
+                  </li>
+                ))}
+              </ul>
+              <div class="mt-8">
+                <a 
+                  href={`/pl/contact?service=${service.id}`}
+                  class="inline-block bg-accent text-white px-6 py-2 rounded-lg font-semibold hover:bg-accent/90 transition-all duration-300 hover:scale-105 transform"
+                >
+                  Wycena
+                </a>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="bg-gradient-to-r from-myrtle to-cadet py-16 relative overflow-hidden">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative">
+        <h2 class="font-heading text-3xl font-bold mb-6 text-white">Potrzebujesz Indywidualnego Rozwiązania?</h2>
+        <p class="text-lg text-gray-100 mb-8 max-w-2xl mx-auto">
+          Skontaktuj się z nami, aby omówić swoje specyficzne wymagania. Stworzymy spersonalizowany plan transportu dla Twojego pupila.
+        </p>
+        <a 
+          href="/pl/contact" 
+          class="inline-block bg-accent text-white px-8 py-3 rounded-lg font-semibold hover:bg-accent/90 transition-all duration-300 hover:scale-105 transform"
+        >
+          Kontakt
+        </a>
+      </div>
+    </section>
+  </main>
+</Layout> 

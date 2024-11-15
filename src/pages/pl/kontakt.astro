@@ -1,0 +1,192 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { Image } from 'astro:assets';
+import heroImage from '../../assets/pets.jpeg';
+
+// Get the service from URL query params if it exists
+const service = Astro.url.searchParams.get('service');
+
+const contactMethods = [
+  {
+    title: 'Email',
+    description: 'Wyślij nam email w dowolnym momencie',
+    value: 'contact@pettransport.eu',
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+    </svg>`
+  },
+  {
+    title: 'Telefon',
+    description: 'Pon-Pt od 8:00 do 18:00',
+    value: '+44 123 456 789',
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+    </svg>`
+  },
+  {
+    title: 'WhatsApp',
+    description: 'Czatuj z nami na WhatsApp',
+    value: '+44 123 456 789',
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+    </svg>`
+  }
+];
+---
+
+<Layout 
+  title="Kontakt | Happy Pet Transport"
+  description="Skontaktuj się z Happy Pet Transport w sprawie bezpiecznego i komfortowego transportu zwierząt w Europie. Zapytaj o wycenę lub zadaj pytanie."
+>
+  <main class="pt-20">
+    <!-- Hero Section -->
+    <section class="relative bg-gradient-to-br from-myrtle/90 to-cadet/90 text-white py-16 md:py-24 overflow-hidden">
+      <div class="absolute inset-0 -z-10">
+        <Image
+          src={heroImage}
+          alt=""
+          class="w-full h-full object-cover opacity-20"
+          quality="low"
+        />
+      </div>
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+        <div class="max-w-3xl mx-auto text-center">
+          <h1 class="font-heading text-4xl md:text-5xl font-bold mb-6 animate-slide-up">
+            Skontaktuj się z nami
+          </h1>
+          <p class="text-lg mb-8 text-gray-100 animate-slide-up [animation-delay:200ms]">
+            Skontaktuj się z naszym zespołem, aby otrzymać wycenę lub zadać pytania dotyczące naszych usług transportu zwierząt.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-16 md:py-24">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+          <!-- Contact Form -->
+          <div class="bg-white p-8 rounded-xl shadow-lg animate-slide-up">
+            <h2 class="font-heading text-2xl font-bold mb-6 text-cadet">Zapytaj o wycenę</h2>
+            <form class="space-y-6" action="/api/contact" method="POST">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label for="firstName" class="block text-sm font-medium text-slate mb-2">Imię</label>
+                  <input
+                    type="text"
+                    id="firstName"
+                    name="firstName"
+                    required
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-accent"
+                  />
+                </div>
+                <div>
+                  <label for="lastName" class="block text-sm font-medium text-slate mb-2">Nazwisko</label>
+                  <input
+                    type="text"
+                    id="lastName"
+                    name="lastName"
+                    required
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-accent"
+                  />
+                </div>
+              </div>
+              
+              <div>
+                <label for="email" class="block text-sm font-medium text-slate mb-2">Email</label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  required
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-accent"
+                />
+              </div>
+
+              <div>
+                <label for="phone" class="block text-sm font-medium text-slate mb-2">Numer telefonu</label>
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-accent"
+                />
+              </div>
+
+              <div>
+                <label for="service" class="block text-sm font-medium text-slate mb-2">Rodzaj usługi</label>
+                <select
+                  id="service"
+                  name="service"
+                  required
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-accent"
+                  value={service || ''}
+                >
+                  <option value="">Wybierz usługę</option>
+                  <option value="international" selected={service === 'international'}>Transport Międzynarodowy</option>
+                  <option value="domestic" selected={service === 'domestic'}>Transport Krajowy</option>
+                  <option value="express" selected={service === 'express'}>Usługa Express</option>
+                  <option value="specialized" selected={service === 'specialized'}>Transport Specjalistyczny</option>
+                </select>
+              </div>
+
+              <div>
+                <label for="message" class="block text-sm font-medium text-slate mb-2">Wiadomość</label>
+                <textarea
+                  id="message"
+                  name="message"
+                  rows="4"
+                  required
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-accent"
+                ></textarea>
+              </div>
+
+              <button
+                type="submit"
+                class="w-full bg-accent text-white px-8 py-3 rounded-lg font-semibold hover:bg-accent/90 transition-all duration-300 transform hover:scale-105"
+              >
+                Wyślij wiadomość
+              </button>
+            </form>
+          </div>
+
+          <!-- Contact Information -->
+          <div class="space-y-8 lg:pl-8">
+            {contactMethods.map((method) => (
+              <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] animate-slide-up">
+                <div class="flex items-start space-x-4">
+                  <div class="w-12 h-12 bg-accent/10 rounded-full flex items-center justify-center flex-shrink-0">
+                    <Fragment set:html={method.icon} />
+                  </div>
+                  <div>
+                    <h3 class="font-heading text-xl font-bold text-cadet">{method.title}</h3>
+                    <p class="text-slate text-sm mb-2">{method.description}</p>
+                    <p class="text-accent font-semibold">{method.value}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+
+            <!-- Additional Info -->
+            <div class="bg-white p-6 rounded-xl shadow-lg animate-slide-up">
+              <h3 class="font-heading text-xl font-bold text-cadet mb-4">Godziny pracy</h3>
+              <ul class="space-y-2 text-slate">
+                <li class="flex justify-between">
+                  <span>Poniedziałek - Piątek</span>
+                  <span>8:00 - 18:00</span>
+                </li>
+                <li class="flex justify-between">
+                  <span>Sobota</span>
+                  <span>9:00 - 16:00</span>
+                </li>
+                <li class="flex justify-between">
+                  <span>Niedziela</span>
+                  <span>Zamknięte</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout> 

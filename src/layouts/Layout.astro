@@ -1,0 +1,488 @@
+---
+import '@fontsource/poppins';
+import '@fontsource/open-sans';
+import '@fontsource/righteous';
+import { ViewTransitions } from 'astro:transitions';
+import LanguageSwitcher from '../components/LanguageSwitcher.astro';
+import { Image } from 'astro:assets';
+import logo from '../assets/logo.svg';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = "Professional pet transport services across UK, Poland, and EU" } = Astro.props;
+
+// Get current path and locale
+const currentPath = Astro.url.pathname;
+const currentLocale = currentPath.startsWith('/pl') ? 'pl' : 'en';
+
+const translations = {
+  en: {
+    home: 'Home',
+    ourPromise: 'Our Promise',
+    services: 'Services',
+    contact: 'Contact',
+    menu: 'Menu',
+    chooseLanguage: 'Choose Language',
+    company: 'Company',
+    contactUs: 'Contact Us',
+    allRightsReserved: 'All rights reserved',
+    // Footer translations
+    aboutUs: 'About Us',
+    privacyPolicy: 'Privacy Policy',
+    termsOfService: 'Terms of Service',
+    cookiePolicy: 'Cookie Policy',
+    licenses: 'Licenses'
+  },
+  pl: {
+    home: 'Strona Główna',
+    ourPromise: 'Nasza Obietnica',
+    services: 'Usługi',
+    contact: 'Kontakt',
+    menu: 'Menu',
+    chooseLanguage: 'Wybierz Język',
+    company: 'Firma',
+    contactUs: 'Kontakt',
+    allRightsReserved: 'Wszelkie prawa zastrzeżone',
+    // Footer translations
+    aboutUs: 'O Nas',
+    privacyPolicy: 'Polityka Prywatności',
+    termsOfService: 'Regulamin',
+    cookiePolicy: 'Polityka Cookies',
+    licenses: 'Licencje'
+  }
+};
+
+// Get current locale and translations
+const t = translations[currentLocale];
+
+// Update navigation links to include locale
+const navLinks = [
+  { href: currentLocale === 'en' ? '/' : '/pl', label: t.home },
+  { href: `/${currentLocale === 'en' ? '' : 'pl/'}pet-care-promise`, label: t.ourPromise },
+  { href: `/${currentLocale === 'en' ? 'services' : 'pl/uslugi'}`, label: t.services },
+  { href: `/${currentLocale === 'en' ? 'contact' : 'pl/kontakt'}`, label: t.contact }
+];
+
+const socialLinks = [
+  {
+    name: 'Instagram',
+    url: 'https://www.instagram.com/happypetstransport',
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+          </svg>`,
+    hoverClass: 'hover:text-[#E4405F]'
+  },
+  {
+    name: 'Facebook',
+    url: 'https://www.facebook.com/profile.php?id=100090279506562',
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/>
+          </svg>`,
+    hoverClass: 'hover:text-[#1877F2]'
+  }
+];
+
+const footerLinks = {
+  company: [
+    { name: 'About Us', href: '/about' },
+    { name: 'Our Promise', href: '/pet-care-promise' },
+    { name: 'Services', href: '/services' },
+    { name: 'Contact', href: '/contact' }
+  ],
+  services: [
+    { name: 'International Transport', href: '/services#international' },
+    { name: 'Domestic Transport', href: '/services#domestic' },
+    { name: 'Express Service', href: '/services#express' },
+    { name: 'Specialized Care', href: '/services#specialized' }
+  ],
+  legal: [
+    { name: 'Privacy Policy', href: '/privacy' },
+    { name: 'Terms of Service', href: '/terms' },
+    { name: 'Cookie Policy', href: '/cookies' },
+    { name: 'Licenses', href: '/licenses' }
+  ]
+};
+
+// Add languages configuration
+const languages = [
+  { code: 'en', name: 'English', flag: '🇬🇧' },
+  { code: 'pl', name: 'Polski', flag: '🇵🇱' }
+];
+
+// Function to get localized path
+function getLocalizedPath(targetLocale: string) {
+  if (targetLocale === 'en') {
+    return currentPath
+      .replace(/^\/pl/, '')
+      .replace('/uslugi', '/services')
+      .replace('/kontakt', '/contact');
+  } else {
+    return currentPath.startsWith('/pl') 
+      ? currentPath 
+      : `/pl${currentPath
+          .replace('/services', '/uslugi')
+          .replace('/contact', '/kontakt')}`;
+  }
+}
+---
+
+<!doctype html>
+<html lang={currentLocale}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content={description} />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href={logo.src} />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <ViewTransitions />
+
+    <!-- Language detection and redirect script -->
+    <script>
+      // Only run on the homepage to avoid redirect loops
+      if (window.location.pathname === '/') {
+        // Get browser language
+        const browserLang = navigator.language.toLowerCase();
+        // Get stored preference if any
+        const storedLang = localStorage.getItem('preferredLanguage');
+        
+        // Function to check if we should show Polish version
+        function shouldShowPolish(lang) {
+          return lang.startsWith('pl');
+        }
+
+        // Use stored preference first, then browser language
+        const userLang = storedLang || browserLang;
+
+        // Redirect to Polish version if appropriate
+        if (shouldShowPolish(userLang) && !window.location.pathname.startsWith('/pl')) {
+          window.location.href = '/pl';
+        }
+      }
+
+      // Store language preference when user manually switches
+      document.addEventListener('astro:page-load', () => {
+        const currentPath = window.location.pathname;
+        const isPolish = currentPath.startsWith('/pl');
+        localStorage.setItem('preferredLanguage', isPolish ? 'pl' : 'en');
+      });
+    </script>
+    <link rel="alternate" hreflang="en" href={`https://yoursite.com${currentPath.replace(/^\/pl/, '')}`} />
+    <link rel="alternate" hreflang="pl" href={`https://yoursite.com/pl${currentPath.replace(/^\/pl/, '')}`} />
+    <meta http-equiv="content-language" content={currentLocale}>
+  </head>
+  <body class="bg-slate/5 flex flex-col min-h-screen">
+    <header class="bg-white shadow-sm fixed w-full top-0 z-50">
+      <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+        <a href="/" class="flex items-center gap-3 hover:opacity-90 transition-opacity duration-300">
+          <Image
+            src={logo}
+            alt="Happy Pet Transport Logo"
+            width={48}
+            height={48}
+            class="w-12 h-12 animate-driving"
+          />
+          <span class="font-fredoka text-2xl font-bold text-accent">Happy Pet Transport</span>
+        </a>
+
+        <!-- Mobile Menu Button -->
+        <button
+          id="menuButton"
+          class="lg:hidden text-slate hover:text-accent transition-colors duration-300"
+          aria-label="Toggle menu"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+
+        <!-- Desktop Navigation -->
+        <div class="hidden lg:flex items-center gap-8">
+          <div class="flex gap-6">
+            {navLinks.map(({ href, label }) => (
+              <a 
+                href={href} 
+                class={`text-slate hover:text-accent transition-all duration-300 hover:scale-105 ${
+                  currentPath === href ? 'text-accent font-semibold' : ''
+                }`}
+              >
+                {label}
+              </a>
+            ))}
+          </div>
+
+          <LanguageSwitcher />
+
+          <!-- Social Links -->
+          <div class="flex items-center gap-4 border-l pl-8 border-slate/10">
+            {socialLinks.map((social) => (
+              <a
+                href={social.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                class={`text-slate transition-all duration-300 hover:scale-110 transform ${social.hoverClass}`}
+                aria-label={`Follow us on ${social.name}`}
+              >
+                <Fragment set:html={social.icon} />
+              </a>
+            ))}
+          </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div
+          id="mobileMenu"
+          class="fixed inset-0 bg-white/95 z-50 transform transition-transform duration-300 translate-x-full lg:hidden"
+        >
+          <div class="h-20 px-4 sm:px-6 flex items-center justify-between border-b border-slate/10">
+            <span class="font-heading text-2xl font-bold text-accent">{t.menu}</span>
+            <button
+              id="closeMenu"
+              class="text-slate hover:text-accent transition-colors duration-300"
+              aria-label="Close menu"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+          
+          <div class="px-4 sm:px-6 py-8">
+            <div class="flex flex-col gap-6">
+              {navLinks.map(({ href, label }) => (
+                <a 
+                  href={href} 
+                  class={`text-xl text-slate hover:text-accent transition-all duration-300 ${
+                    currentPath === href ? 'text-accent font-semibold' : ''
+                  }`}
+                >
+                  {label}
+                </a>
+              ))}
+            </div>
+
+            <!-- Language Switcher in Mobile Menu -->
+            <div class="px-4 sm:px-6 py-4 border-t border-slate/10">
+              <p class="text-sm font-medium text-slate/70 mb-3 px-4">{t.chooseLanguage}</p>
+              <LanguageSwitcher />
+            </div>
+
+            <!-- Social Links in Mobile Menu -->
+            <div class="mt-4 px-4 sm:px-6 py-4 border-t border-slate/10">
+              <div class="flex justify-center gap-6">
+                {socialLinks.map((social) => (
+                  <a
+                    href={social.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class={`text-slate transition-all duration-300 ${social.hoverClass}`}
+                    aria-label={`Follow us on ${social.name}`}
+                  >
+                    <Fragment set:html={social.icon} />
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+    
+    <main 
+      class="flex-grow" 
+      transition:animate="fade"
+      transition:duration="300"
+    >
+      <slot />
+    </main>
+
+    <footer class="bg-white mt-auto">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+        <!-- Top Section -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+          <!-- Company Info -->
+          <div class="space-y-4">
+            <a href="/" class="font-righteous text-2xl text-accent hover:text-myrtle transition-colors duration-300">
+              Happy Pet Transport
+            </a>
+            <p class="text-slate text-sm">
+              Professional pet transport services across Europe. Licensed, insured, and dedicated to your pet's comfort and safety.
+            </p>
+            <div class="flex gap-4">
+              {socialLinks.map((social) => (
+                <a
+                  href={social.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class={`text-slate transition-all duration-300 hover:scale-110 transform ${social.hoverClass}`}
+                  aria-label={`Follow us on ${social.name}`}
+                >
+                  <Fragment set:html={social.icon} />
+                </a>
+              ))}
+            </div>
+          </div>
+
+          <!-- Quick Links -->
+          <div>
+            <h3 class="font-heading font-bold text-lg text-cadet mb-4">Company</h3>
+            <ul class="space-y-2">
+              {footerLinks.company.map((link) => (
+                <li>
+                  <a href={link.href} class="text-slate hover:text-accent transition-colors duration-300">{link.name}</a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <!-- Services -->
+          <div>
+            <h3 class="font-heading font-bold text-lg text-cadet mb-4">Services</h3>
+            <ul class="space-y-2">
+              {footerLinks.services.map((link) => (
+                <li>
+                  <a href={link.href} class="text-slate hover:text-accent transition-colors duration-300">{link.name}</a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <!-- Contact Info -->
+          <div>
+            <h3 class="font-heading font-bold text-lg text-cadet mb-4">Contact Us</h3>
+            <ul class="space-y-2 text-slate">
+              <li class="flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                </svg>
+                <span>+44 123 456 789</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                <span>contact@pettransport.eu</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>Mon-Fri: 8am-6pm</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Bottom Section -->
+        <div class="border-t border-slate/10 pt-8">
+          <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+            <p class="text-slate text-sm">
+              © {new Date().getFullYear()} Happy Pet Transport. {t.allRightsReserved}
+            </p>
+            <ul class="flex flex-wrap gap-6">
+              {footerLinks.legal.map((link) => (
+                <li>
+                  <a href={link.href} class="text-slate hover:text-accent text-sm transition-colors duration-300">{link.name}</a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // Function to handle language switching
+      function handleLanguageSwitch(event: Event) {
+        const link = event.currentTarget as HTMLAnchorElement;
+        if (link?.href) {
+          event.preventDefault();
+          // Force a full page reload instead of using view transitions
+          window.location.href = link.href;
+        }
+      }
+
+      // Function to initialize language switcher
+      function initializeLanguageSwitcher() {
+        // Add click handlers to all language switcher links
+        document.querySelectorAll('[data-language-link]').forEach(link => {
+          // Remove existing listeners first to prevent duplicates
+          link.removeEventListener('click', handleLanguageSwitch);
+          // Add new listener
+          link.addEventListener('click', handleLanguageSwitch);
+        });
+      }
+
+      // Initialize on first load
+      initializeLanguageSwitcher();
+
+      // Re-initialize after view transitions
+      document.addEventListener('astro:after-swap', initializeLanguageSwitcher);
+
+      // Cleanup function
+      function cleanup() {
+        document.querySelectorAll('[data-language-link]').forEach(link => {
+          link.removeEventListener('click', handleLanguageSwitch);
+        });
+      }
+
+      // Cleanup before view transitions
+      document.addEventListener('astro:before-swap', cleanup);
+
+      function initializeMobileMenu() {
+        const menuButton = document.getElementById('menuButton');
+        const closeMenu = document.getElementById('closeMenu');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const body = document.body;
+
+        function toggleMenu(show: boolean) {
+          if (!mobileMenu) return;
+          
+          if (show) {
+            mobileMenu.classList.remove('translate-x-full');
+            body.style.overflow = 'hidden';
+          } else {
+            mobileMenu.classList.add('translate-x-full');
+            body.style.overflow = '';
+          }
+        }
+
+        // Remove existing listeners first
+        menuButton?.removeEventListener('click', () => toggleMenu(true));
+        closeMenu?.removeEventListener('click', () => toggleMenu(false));
+
+        // Add new listeners
+        menuButton?.addEventListener('click', () => toggleMenu(true));
+        closeMenu?.addEventListener('click', () => toggleMenu(false));
+
+        // Close menu when clicking on mobile navigation links
+        const mobileLinks = mobileMenu?.getElementsByTagName('a');
+        if (mobileLinks) {
+          Array.from(mobileLinks).forEach(link => {
+            link.addEventListener('click', () => toggleMenu(false));
+          });
+        }
+      }
+
+      // Initialize on first load
+      initializeMobileMenu();
+
+      // Re-initialize after view transitions
+      document.addEventListener('astro:after-swap', initializeMobileMenu);
+
+      // Cleanup before view transitions
+      document.addEventListener('astro:before-swap', () => {
+        const mobileMenu = document.getElementById('mobileMenu');
+        const body = document.body;
+        
+        if (mobileMenu) {
+          mobileMenu.classList.add('translate-x-full');
+          body.style.overflow = '';
+        }
+      });
+    </script>
+  </body>
+</html>

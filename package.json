@@ -1,0 +1,22 @@
+{
+  "name": "pet-transport-eu",
+  "type": "module",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/tailwind": "^5.1.0",
+    "@fontsource/fredoka": "^5.1.0",
+    "@fontsource/open-sans": "^5.0.8",
+    "@fontsource/poppins": "^5.0.8",
+    "@fontsource/righteous": "^5.1.0",
+    "astro": "^4.15.3",
+    "tailwindcss": "^3.4.1"
+  }
+}

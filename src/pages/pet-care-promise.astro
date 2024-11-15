@@ -1,0 +1,162 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { Image } from 'astro:assets';
+import heroImage from '../assets/pets.jpeg';
+
+const promises = [
+  {
+    id: 'safety',
+    title: 'Safety First',
+    icon: 'shield-check',
+    description: 'Our team is trained in pet safety and transport, ensuring that each journey is as safe and secure as possible. We carefully monitor your pet and make adjustments as needed to keep them comfortable.',
+    details: [
+      'Certified staff trained in pet first aid',
+      'Comprehensive safety protocols',
+      'Regular vehicle safety inspections',
+      'Partnership with animal welfare organizations'
+    ]
+  },
+  {
+    id: 'climate',
+    title: 'Climate-Controlled Environment',
+    icon: 'sun',
+    description: 'Our vehicles are equipped with state-of-the-art climate control systems to maintain optimal comfort regardless of external weather conditions.',
+    details: [
+      'Constant temperature monitoring',
+      'Advanced air filtration system',
+      'Proper ventilation throughout',
+      'Weather-adapted comfort settings'
+    ]
+  },
+  {
+    id: 'breaks',
+    title: 'Regular Care Breaks',
+    icon: 'clock',
+    description: 'We make regular stops every 2-3 hours, giving your pet a chance to stretch, drink water, and get some fresh air. For longer journeys, we ensure they have adequate time for feeding and exercise.',
+    details: [
+      'Scheduled comfort breaks',
+      'Fresh water always available',
+      'Exercise opportunities',
+      'Pet-specific break schedules'
+    ]
+  },
+  {
+    id: 'attention',
+    title: 'Individualized Attention',
+    icon: 'heart',
+    description: 'We provide spacious, secure crates designed to offer comfort and privacy for each pet. This reduces stress and gives your pet a familiar, safe spot for the duration of the journey.',
+    details: [
+      'Spacious individual compartments',
+      'Welcome to bring familiar items',
+      'Personalized care approach',
+      'Stress-minimizing environment'
+    ]
+  },
+  {
+    id: 'monitoring',
+    title: 'Health Monitoring',
+    icon: 'activity',
+    description: 'Throughout the trip, our team checks in on each pet, monitoring for signs of stress or discomfort. If any pet shows signs of distress, we are ready to make adjustments to ensure they feel safe and cared for.',
+    details: [
+      'Regular health check-ins',
+      'Behavior monitoring',
+      'Stress level assessment',
+      'Immediate response to concerns'
+    ]
+  },
+  {
+    id: 'emergency',
+    title: 'Emergency Preparedness',
+    icon: 'alert-circle',
+    description: 'Our vehicles are equipped with emergency kits, and our team is prepared for any situation that may arise. We have a network of veterinarians along our routes, ensuring your pet receives immediate care if needed.',
+    details: [
+      'Full emergency kit onboard',
+      'Veterinary network access',
+      'Emergency response protocols',
+      '24/7 support availability'
+    ]
+  }
+];
+---
+
+<Layout 
+  title="Our Promise | Happy Pet Transport"
+  description="Discover our comprehensive pet care promise - ensuring safe, comfortable, and stress-free transport for your beloved pets across Europe."
+>
+  <main class="pt-20">
+    <!-- Hero Section -->
+    <section class="relative bg-gradient-to-br from-myrtle/90 to-cadet/90 text-white py-16 md:py-24 overflow-hidden">
+      <div class="absolute inset-0 -z-10">
+        <Image
+          src={heroImage}
+          alt=""
+          class="w-full h-full object-cover opacity-20"
+          quality="low"
+        />
+      </div>
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+        <div class="max-w-3xl mx-auto text-center">
+          <h1 class="font-heading text-4xl md:text-5xl font-bold mb-6 animate-slide-up">
+            Our Pet Care Promise
+          </h1>
+          <p class="text-lg mb-8 text-gray-100 animate-slide-up [animation-delay:200ms]">
+            Your pet's safety, comfort, and well-being are our top priorities. Every journey is planned with care, executed with expertise, and monitored with dedication.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Promises Grid -->
+    <section class="py-16 md:py-24">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+          {promises.map((promise, index) => (
+            <div class={`bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] animate-slide-up`} style={`animation-delay: ${index * 100}ms`}>
+              <div class="w-14 h-14 bg-accent/10 rounded-full flex items-center justify-center mb-6">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <h2 class="font-heading text-2xl font-bold mb-4 text-cadet">{promise.title}</h2>
+              <p class="text-slate mb-6">{promise.description}</p>
+              <ul class="space-y-3">
+                {promise.details.map((detail) => (
+                  <li class="flex items-center text-slate">
+                    <svg class="h-5 w-5 text-accent mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                    {detail}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="bg-gradient-to-r from-myrtle to-cadet py-16 relative overflow-hidden">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative">
+        <h2 class="font-heading text-3xl font-bold mb-6 text-white">Ready to Transport Your Pet?</h2>
+        <p class="text-lg text-gray-100 mb-8 max-w-2xl mx-auto">
+          Experience the difference of truly caring pet transport. Contact us today to discuss your pet's journey.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a 
+            href="/contact" 
+            class="bg-accent text-white px-8 py-3 rounded-lg font-semibold hover:bg-accent/90 transition-all duration-300 hover:scale-105 transform"
+          >
+            Get a Quote
+          </a>
+          <a 
+            href="/services" 
+            class="border-2 border-accent text-white px-8 py-3 rounded-lg font-semibold hover:bg-accent hover:border-accent transition-all duration-300 hover:scale-105 transform"
+          >
+            Our Services
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout> 
