@@ -38,44 +38,32 @@ function getLocalizedPath(targetLocale: string) {
     return newPath;
   }
 }
+
+// Add a prop to determine if this is mobile version
+interface Props {
+  isMobile?: boolean;
+}
+
+const { isMobile = false } = Astro.props;
 ---
 
-<!-- Desktop Language Switcher -->
-<div class="relative group">
-  <button 
-    id="languageButton"
-    class="flex items-center gap-2 px-4 py-2 rounded-lg bg-slate/5 hover:bg-slate/10 transition-colors duration-300"
-    aria-expanded="false"
-  >
-    <span class="text-lg">{languages.find(l => l.code === currentLocale)?.flag}</span>
-    <span class="text-sm font-medium text-slate">{languages.find(l => l.code === currentLocale)?.name}</span>
-    <svg 
-      class="w-4 h-4 text-slate/70 group-hover:text-accent transition-colors duration-300" 
-      fill="none" 
-      viewBox="0 0 24 24" 
-      stroke="currentColor"
-    >
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-    </svg>
-  </button>
-
-  <!-- Dropdown -->
-  <div 
-    id="languageDropdown"
-    class="absolute right-0 mt-2 w-48 py-2 bg-white rounded-lg shadow-lg border border-slate/10 opacity-0 invisible translate-y-2 transition-all duration-300"
-  >
+{isMobile ? (
+  <!-- Mobile Language Switcher -->
+  <div class="space-y-1">
     {languages.map(({ code, name, flag }) => (
       <a
         href={code === currentLocale ? undefined : getLocalizedPath(code)}
-        class={`flex items-center gap-3 px-4 py-2 hover:bg-slate/5 transition-colors duration-300 ${
-          currentLocale === code ? 'text-accent font-medium pointer-events-none' : 'text-slate'
+        class={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors duration-300 ${
+          currentLocale === code 
+            ? 'bg-accent/10 text-accent font-medium pointer-events-none' 
+            : 'text-slate hover:bg-slate/5'
         }`}
         aria-label={`Switch to ${name}`}
         data-language-link
         data-astro-reload
       >
         <span class="text-lg">{flag}</span>
-        <span class="text-sm">{name}</span>
+        <span>{name}</span>
         {currentLocale === code && (
           <svg class="w-4 h-4 ml-auto text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
@@ -84,61 +72,71 @@ function getLocalizedPath(targetLocale: string) {
       </a>
     ))}
   </div>
-</div>
+) : (
+  <!-- Desktop Language Switcher -->
+  <div class="relative group">
+    <button 
+      id="languageButton"
+      class="flex items-center gap-2 px-4 py-2 rounded-lg bg-slate/5 hover:bg-slate/10 transition-colors duration-300"
+      aria-expanded="false"
+    >
+      <span class="text-lg">{languages.find(l => l.code === currentLocale)?.flag}</span>
+      <span class="text-sm font-medium text-slate">{languages.find(l => l.code === currentLocale)?.name}</span>
+      <svg 
+        class="w-4 h-4 text-slate/70 group-hover:text-accent transition-colors duration-300" 
+        fill="none" 
+        viewBox="0 0 24 24" 
+        stroke="currentColor"
+      >
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+      </svg>
+    </button>
+
+    <!-- Dropdown -->
+    <div 
+      id="languageDropdown"
+      class="absolute right-0 mt-2 w-48 py-2 bg-white rounded-lg shadow-lg border border-slate/10 opacity-0 invisible translate-y-2 transition-all duration-300"
+    >
+      {languages.map(({ code, name, flag }) => (
+        <a
+          href={code === currentLocale ? undefined : getLocalizedPath(code)}
+          class={`flex items-center gap-3 px-4 py-2 hover:bg-slate/5 transition-colors duration-300 ${
+            currentLocale === code ? 'text-accent font-medium pointer-events-none' : 'text-slate'
+          }`}
+          aria-label={`Switch to ${name}`}
+          data-language-link
+          data-astro-reload
+        >
+          <span class="text-lg">{flag}</span>
+          <span class="text-sm">{name}</span>
+          {currentLocale === code && (
+            <svg class="w-4 h-4 ml-auto text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+          )}
+        </a>
+      ))}
+    </div>
+  </div>
+)}
 
 <script>
-  // Function to handle language switching
   function handleLanguageSwitch(event: Event) {
     const link = event.currentTarget as HTMLAnchorElement;
     if (link?.href) {
       event.preventDefault();
-      console.log('Switching to:', link.href); // Debug log
+      // Force a full page reload
       window.location.href = link.href;
     }
   }
 
-  function toggleLanguageDropdown(show: boolean) {
-    const button = document.getElementById('languageButton');
-    const dropdown = document.getElementById('languageDropdown');
-    
-    if (!button || !dropdown) return;
-    
-    button.setAttribute('aria-expanded', show.toString());
-    
-    if (show) {
-      dropdown.classList.remove('opacity-0', 'invisible', 'translate-y-2');
-    } else {
-      dropdown.classList.add('opacity-0', 'invisible', 'translate-y-2');
-    }
-  }
-
   function initializeLanguageSwitcher() {
-    const button = document.getElementById('languageButton');
-    const links = document.querySelectorAll('[data-language-link]');
-
-    // Toggle dropdown on button click
-    button?.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const isExpanded = button.getAttribute('aria-expanded') === 'true';
-      toggleLanguageDropdown(!isExpanded);
-    });
-
-    // Add click handlers to language links
-    links.forEach(link => {
+    // Add click handlers to all language links
+    document.querySelectorAll('[data-language-link]').forEach(link => {
+      // Remove existing listeners first
       link.removeEventListener('click', handleLanguageSwitch);
+      // Add new listener
       link.addEventListener('click', handleLanguageSwitch);
-    });
-
-    // Close when clicking outside
-    document.addEventListener('click', () => {
-      toggleLanguageDropdown(false);
-    });
-
-    // Close when pressing Escape
-    document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape') {
-        toggleLanguageDropdown(false);
-      }
     });
   }
 
