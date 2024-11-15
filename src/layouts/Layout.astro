@@ -481,6 +481,16 @@ function getLocalizedPath(targetLocale: string) {
 
       // Make toggleMenu available globally
       window.toggleMobileMenu = toggleMenu;
+
+      // Create a type-safe way to share the toggle function
+      const mobileMenuController = {
+        toggle: toggleMenu
+      };
+
+      // Make it available to other scripts
+      document.addEventListener('DOMContentLoaded', () => {
+        (window as any).mobileMenuController = mobileMenuController;
+      });
     </script>
     <FloatingContact />
     <FloatingHamburger />

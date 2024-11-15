@@ -58,13 +58,17 @@ const testimonials = [
   <main>
     <!-- Hero Section -->
     <section class="relative bg-gradient-to-br from-myrtle/90 to-cadet/90 text-white pt-28 pb-16 md:py-24 overflow-hidden">
-      <!-- Background Image -->
       <div class="absolute inset-0 -z-10">
         <Image
           src={heroImage}
-          alt=""
+          alt="Happy pets ready for safe transport across Europe"
           class="w-full h-full object-cover opacity-20"
-          quality="low"
+          loading="eager"
+          priority={true}
+          quality="mid"
+          format="webp"
+          width={1200}
+          height={800}
         />
       </div>
 
