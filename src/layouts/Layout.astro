@@ -1,6 +1,4 @@
 ---
-import '@fontsource/poppins';
-import '@fontsource/open-sans';
 import '@fontsource/righteous';
 import { ViewTransitions } from 'astro:transitions';
 import LanguageSwitcher from '../components/LanguageSwitcher.astro';
@@ -434,9 +432,9 @@ function getLocalizedPath(targetLocale: string) {
       // Cleanup before view transitions
       document.addEventListener('astro:before-swap', cleanup);
 
-      function initializeMobileMenu() {
-        const menuButton = document.getElementById('menuButton');
-        const closeMenu = document.getElementById('closeMenu');
+      function initializeMenus() {
+        const navbarMenuButton = document.getElementById('menuButton');
+        const floatingMenuButton = document.getElementById('floatingMenuButton');
         const mobileMenu = document.getElementById('mobileMenu');
         const body = document.body;
 
@@ -452,13 +450,23 @@ function getLocalizedPath(targetLocale: string) {
           }
         }
 
-        // Remove existing listeners first
-        menuButton?.removeEventListener('click', () => toggleMenu(true));
-        closeMenu?.removeEventListener('click', () => toggleMenu(false));
+        // Handle navbar menu button
+        navbarMenuButton?.addEventListener('click', () => {
+          const isMenuHidden = mobileMenu?.classList.contains('translate-x-full');
+          toggleMenu(isMenuHidden);
+        });
 
-        // Add new listeners
-        menuButton?.addEventListener('click', () => toggleMenu(true));
-        closeMenu?.addEventListener('click', () => toggleMenu(false));
+        // Handle floating menu button
+        floatingMenuButton?.addEventListener('click', () => {
+          const isMenuHidden = mobileMenu?.classList.contains('translate-x-full');
+          toggleMenu(isMenuHidden);
+        });
+
+        // Handle close button in mobile menu
+        const closeMenu = document.getElementById('closeMenu');
+        closeMenu?.addEventListener('click', () => {
+          toggleMenu(false);
+        });
 
         // Close menu when clicking on mobile navigation links
         const mobileLinks = mobileMenu?.getElementsByTagName('a');
@@ -470,10 +478,10 @@ function getLocalizedPath(targetLocale: string) {
       }
 
       // Initialize on first load
-      initializeMobileMenu();
+      initializeMenus();
 
       // Re-initialize after view transitions
-      document.addEventListener('astro:after-swap', initializeMobileMenu);
+      document.addEventListener('astro:after-swap', initializeMenus);
 
       // Cleanup before view transitions
       document.addEventListener('astro:before-swap', () => {
