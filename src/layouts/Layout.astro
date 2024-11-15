@@ -13,14 +13,9 @@ import type { ImageMetadata } from 'astro';
 interface Props {
   title: string;
   description?: string;
-  heroImage?: ImageMetadata;
 }
 
-const { 
-  title, 
-  description = "Professional pet transport services across UK, Poland, and EU",
-  heroImage 
-} = Astro.props;
+const { title, description = "Professional pet transport services across UK, Poland, and EU" } = Astro.props;
 
 // Get current path and locale
 const currentPath = Astro.url.pathname;
@@ -138,57 +133,15 @@ function getLocalizedPath(targetLocale: string) {
 ---
 
 <!doctype html>
-<html lang={currentLocale}>
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="description" content={description} />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
-    
-    {heroImage && (
-      <link
-        rel="preload"
-        as="image"
-        href={heroImage.src}
-        fetchpriority="high"
-      />
-    )}
-    
     <title>{title}</title>
     <ViewTransitions />
-
-    <!-- Language detection script - moved to top of head -->
-    <script>
-      // Run this script as early as possible
-      (function() {
-        const currentPath = window.location.pathname;
-        
-        // Only redirect if we're not already on the correct language path
-        if (currentPath === '/') {
-          const storedLang = localStorage.getItem('preferredLanguage');
-          const browserLang = navigator.language.toLowerCase();
-          const userLang = storedLang || browserLang;
-          
-          if (userLang.startsWith('pl')) {
-            window.location.replace('/pl');
-          }
-        }
-      })();
-    </script>
-
-    <!-- Language switcher script -->
-    <script>
-      document.addEventListener('astro:page-load', () => {
-        const currentPath = window.location.pathname;
-        const isPolish = currentPath.startsWith('/pl');
-        localStorage.setItem('preferredLanguage', isPolish ? 'pl' : 'en');
-      });
-    </script>
-
-    <link rel="alternate" hreflang="en" href={`https://yoursite.com${currentPath.replace(/^\/pl/, '')}`} />
-    <link rel="alternate" hreflang="pl" href={`https://yoursite.com/pl${currentPath.replace(/^\/pl/, '')}`} />
-    <meta http-equiv="content-language" content={currentLocale}>
   </head>
   <body class="bg-slate/5 flex flex-col min-h-screen">
     <header class="bg-white shadow-sm fixed w-full top-0 z-50">
@@ -432,6 +385,16 @@ function getLocalizedPath(targetLocale: string) {
       // Cleanup before view transitions
       document.addEventListener('astro:before-swap', cleanup);
 
+      interface MobileMenuController {
+        toggle: (show: boolean) => void;
+      }
+
+      declare global {
+        interface Window {
+          mobileMenuController: MobileMenuController;
+        }
+      }
+
       function toggleMenu(show: boolean) {
         const mobileMenu = document.getElementById('mobileMenu');
         const body = document.body;
@@ -447,66 +410,10 @@ function getLocalizedPath(targetLocale: string) {
         }
       }
 
-      function initializeMobileMenu() {
-        const menuButton = document.getElementById('menuButton');
-        const closeMenu = document.getElementById('closeMenu');
-        const mobileMenu = document.getElementById('mobileMenu');
-
-        // Handle menu button click
-        menuButton?.addEventListener('click', (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          const isMenuHidden = mobileMenu?.classList.contains('translate-x-full');
-          toggleMenu(isMenuHidden);
-        });
-
-        // Handle close button click
-        closeMenu?.addEventListener('click', (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          toggleMenu(false);
-        });
-
-        // Close menu when clicking on mobile navigation links
-        const mobileLinks = mobileMenu?.getElementsByTagName('a');
-        if (mobileLinks) {
-          Array.from(mobileLinks).forEach(link => {
-            link.addEventListener('click', () => toggleMenu(false));
-          });
-        }
-
-        // Close menu when clicking outside
-        document.addEventListener('click', (event) => {
-          if (mobileMenu && !mobileMenu.contains(event.target as Node) && 
-              menuButton && !menuButton.contains(event.target as Node)) {
-            toggleMenu(false);
-          }
-        });
-      }
-
-      // Initialize on first load
-      initializeMobileMenu();
-
-      // Re-initialize after view transitions
-      document.addEventListener('astro:after-swap', initializeMobileMenu);
-
-      // Cleanup before view transitions
-      document.addEventListener('astro:before-swap', () => {
-        toggleMenu(false);
-      });
-
-      // Make toggleMenu available globally
-      window.toggleMobileMenu = toggleMenu;
-
-      // Create a type-safe way to share the toggle function
-      const mobileMenuController = {
+      // Initialize the controller
+      window.mobileMenuController = {
         toggle: toggleMenu
       };
-
-      // Make it available to other scripts
-      document.addEventListener('DOMContentLoaded', () => {
-        (window as any).mobileMenuController = mobileMenuController;
-      });
     </script>
     <FloatingContact />
     <FloatingHamburger />
