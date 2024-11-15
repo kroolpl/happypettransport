@@ -20,11 +20,11 @@ const contactOptions = [
 ---
 
 <div class="fixed bottom-20 right-4 z-[9999] block md:hidden">
-  <!-- Main Button - Added floating animation -->
+  <!-- Main Button - Added transparency -->
   <button
     type="button"
     id="contactToggle"
-    class="w-14 h-14 bg-accent rounded-full shadow-lg flex items-center justify-center text-white transition-all duration-300 hover:shadow-xl hover:-translate-y-1 animate-floating-subtle"
+    class="w-14 h-14 bg-accent/90 backdrop-blur-sm rounded-full shadow-lg flex items-center justify-center text-white transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:bg-accent animate-floating-subtle"
     aria-label="Contact options"
   >
     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -32,7 +32,7 @@ const contactOptions = [
     </svg>
   </button>
 
-  <!-- Contact Options -->
+  <!-- Contact Options - Added transparency -->
   <div 
     id="contactOptions" 
     class="absolute bottom-16 right-0 flex flex-col gap-3 scale-0 opacity-0 transition-all duration-300 origin-bottom-right"
@@ -42,7 +42,7 @@ const contactOptions = [
         href={option.url}
         target="_blank"
         rel="noopener noreferrer"
-        class={`w-12 h-12 ${option.color} rounded-full shadow-lg flex items-center justify-center text-white transition-all duration-300 hover:shadow-xl hover:-translate-y-1`}
+        class={`w-12 h-12 ${option.color.replace('bg-', 'bg-opacity-90 bg-')} backdrop-blur-sm rounded-full shadow-lg flex items-center justify-center text-white transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:bg-opacity-100`}
         aria-label={`Contact through ${option.name}`}
         style={`transition-delay: ${index * 50}ms;`}
       >
