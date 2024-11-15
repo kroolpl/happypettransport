@@ -10,6 +10,22 @@ import lunaImage from '../assets/testimonials/luna.jpg';
 import maxImage from '../assets/testimonials/max.jpg';
 import bellaImage from '../assets/testimonials/bella.jpg';
 
+// Define image sizes for different breakpoints
+const imageSizes = {
+  mobile: {
+    width: 640,
+    height: 360
+  },
+  tablet: {
+    width: 1024,
+    height: 576
+  },
+  desktop: {
+    width: 1920,
+    height: 1080
+  }
+};
+
 // Add structured data for SEO
 const structuredData = {
   "@context": "https://schema.org",
@@ -51,6 +67,7 @@ const testimonials = [
 <Layout 
   title="Happy Pet Transport - Safe Pet Transport Across Europe"
   description="Professional pet transport services between UK, Poland, and EU countries. Licensed, insured, and focused on pet comfort and safety."
+  heroImage={heroImage}
 >
   <!-- Add structured data -->
   <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
@@ -59,17 +76,36 @@ const testimonials = [
     <!-- Hero Section -->
     <section class="relative bg-gradient-to-br from-myrtle/90 to-cadet/90 text-white pt-28 pb-16 md:py-24 overflow-hidden">
       <div class="absolute inset-0 -z-10">
-        <Image
-          src={heroImage}
-          alt="Happy pets ready for safe transport across Europe"
-          class="w-full h-full object-cover opacity-20"
-          loading="eager"
-          priority={true}
-          quality="mid"
-          format="webp"
-          width={1200}
-          height={800}
-        />
+        <picture>
+          <!-- Mobile image -->
+          <source
+            media="(max-width: 640px)"
+            srcset={
+              `${heroImage.src}?w=${imageSizes.mobile.width}&h=${imageSizes.mobile.height}&q=80 1x,
+               ${heroImage.src}?w=${imageSizes.mobile.width * 2}&h=${imageSizes.mobile.height * 2}&q=80 2x`
+            }
+          />
+          <!-- Tablet image -->
+          <source
+            media="(max-width: 1024px)"
+            srcset={
+              `${heroImage.src}?w=${imageSizes.tablet.width}&h=${imageSizes.tablet.height}&q=80 1x,
+               ${heroImage.src}?w=${imageSizes.tablet.width * 2}&h=${imageSizes.tablet.height * 2}&q=80 2x`
+            }
+          />
+          <!-- Desktop image -->
+          <Image
+            src={heroImage}
+            alt="Happy pets ready for safe transport across Europe"
+            class="w-full h-full object-cover opacity-20"
+            width={imageSizes.desktop.width}
+            height={imageSizes.desktop.height}
+            loading="eager"
+            decoding="sync"
+            fetchpriority="high"
+            quality={80}
+          />
+        </picture>
       </div>
 
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
