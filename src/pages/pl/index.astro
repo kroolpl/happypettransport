@@ -231,7 +231,7 @@ const testimonials = [
             <button 
               id="prevSlide"
               class="p-2 rounded-full bg-white shadow-md text-accent hover:bg-accent hover:text-white transition-colors duration-300"
-              aria-label="Poprzednia opinia"
+              aria-label="Poprzedni"
             >
               <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
@@ -252,7 +252,7 @@ const testimonials = [
             <button 
               id="nextSlide"
               class="p-2 rounded-full bg-white shadow-md text-accent hover:bg-accent hover:text-white transition-colors duration-300"
-              aria-label="Następna opinia"
+              aria-label="Następny"
             >
               <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -292,4 +292,103 @@ const testimonials = [
   </main>
 </Layout>
 
-<!-- ... carousel script remains the same ... --> 
+<script>
+  function initializeCarousel() {
+    let currentSlide = 0;
+    const slider = document.getElementById('testimonialSlider');
+    const slides = slider?.children;
+    const dots = document.querySelectorAll('#slideDots button');
+    const totalSlides = slides?.length || 0;
+
+    function updateSlider() {
+      if (slider && slides) {
+        const offset = -100 * currentSlide;
+        slider.style.transform = `translateX(${offset}%)`;
+
+        // Update dots
+        dots.forEach((dot, index) => {
+          if (index === currentSlide) {
+            dot.classList.add('bg-accent', 'w-4');
+            dot.classList.remove('bg-accent/30');
+          } else {
+            dot.classList.remove('bg-accent', 'w-4');
+            dot.classList.add('bg-accent/30');
+          }
+        });
+      }
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides - 1) {
+        currentSlide++;
+      } else {
+        currentSlide = 0;
+      }
+      updateSlider();
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) {
+        currentSlide--;
+      } else {
+        currentSlide = totalSlides - 1;
+      }
+      updateSlider();
+    }
+
+    // Event listeners
+    document.getElementById('nextSlide')?.addEventListener('click', nextSlide);
+    document.getElementById('prevSlide')?.addEventListener('click', prevSlide);
+
+    // Dot navigation
+    dots.forEach((dot) => {
+      dot.addEventListener('click', () => {
+        const index = parseInt(dot.getAttribute('data-index') || '0');
+        currentSlide = index;
+        updateSlider();
+      });
+    });
+
+    // Auto-advance slides every 5 seconds
+    const autoAdvance = setInterval(nextSlide, 5000);
+
+    // Touch support for swiping
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    slider?.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    });
+
+    slider?.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipe();
+    });
+
+    function handleSwipe() {
+      const swipeThreshold = 50;
+      const diff = touchStartX - touchEndX;
+
+      if (Math.abs(diff) > swipeThreshold) {
+        if (diff > 0) {
+          nextSlide();
+        } else {
+          prevSlide();
+        }
+      }
+    }
+
+    return () => {
+      clearInterval(autoAdvance);
+    };
+  }
+
+  // Initialize on page load
+  let cleanup = initializeCarousel();
+
+  // Re-initialize after view transitions
+  document.addEventListener('astro:after-swap', () => {
+    if (cleanup) cleanup();
+    cleanup = initializeCarousel();
+  });
+</script> 
