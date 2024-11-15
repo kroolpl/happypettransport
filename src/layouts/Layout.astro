@@ -7,6 +7,7 @@ import LanguageSwitcher from '../components/LanguageSwitcher.astro';
 import { Image } from 'astro:assets';
 import logo from '../assets/logo.svg';
 import FloatingContact from '../components/FloatingContact.astro';
+import FloatingHamburger from '../components/FloatingHamburger.astro';
 
 interface Props {
   title: string;
@@ -180,23 +181,12 @@ function getLocalizedPath(targetLocale: string) {
           <Image
             src={logo}
             alt="Happy Pet Transport Logo"
-            width={48}
-            height={48}
-            class="w-12 h-12 animate-driving"
+            width={40}
+            height={40}
+            class="w-10 h-10 animate-driving"
           />
-          <span class="font-fredoka text-2xl font-bold text-accent">Happy Pet Transport</span>
+          <span class="font-heading text-2xl font-bold text-accent">Happy Pet Transport</span>
         </a>
-
-        <!-- Mobile Menu Button -->
-        <button
-          id="menuButton"
-          class="lg:hidden text-slate hover:text-accent transition-colors duration-300"
-          aria-label="Toggle menu"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-        </button>
 
         <!-- Desktop Navigation -->
         <div class="hidden lg:flex items-center gap-8">
@@ -204,15 +194,20 @@ function getLocalizedPath(targetLocale: string) {
             {navLinks.map(({ href, label }) => (
               <a 
                 href={href} 
-                class={`text-slate hover:text-accent transition-all duration-300 hover:scale-105 ${
-                  currentPath === href ? 'text-accent font-semibold' : ''
-                }`}
+                class={`relative px-2 py-1 text-slate hover:text-accent transition-all duration-300 
+                  after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-accent 
+                  after:transition-all after:duration-300 hover:after:w-full
+                  ${currentPath === href ? 
+                    'text-accent font-semibold after:w-full' : 
+                    'after:opacity-0 hover:after:opacity-100'
+                  }`}
               >
                 {label}
               </a>
             ))}
           </div>
 
+          <!-- Language Switcher -->
           <LanguageSwitcher />
 
           <!-- Social Links -->
@@ -230,6 +225,17 @@ function getLocalizedPath(targetLocale: string) {
             ))}
           </div>
         </div>
+
+        <!-- Original Menu Button -->
+        <button
+          id="menuButton"
+          class="lg:hidden relative group p-2 rounded-lg transition-colors duration-300 hover:bg-slate/5"
+          aria-label="Toggle menu"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-slate group-hover:text-accent transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
 
         <!-- Mobile Menu -->
         <div
@@ -481,5 +487,6 @@ function getLocalizedPath(targetLocale: string) {
       });
     </script>
     <FloatingContact />
+    <FloatingHamburger />
   </body>
 </html>

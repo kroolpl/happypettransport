@@ -9,8 +9,16 @@ const currentPath = Astro.url.pathname;
 const currentLocale = currentPath.startsWith('/pl') ? 'pl' : 'en';
 
 const languages = [
-  { code: 'en', name: 'English', flag: '🇬🇧' },
-  { code: 'pl', name: 'Polski', flag: '🇵🇱' }
+  { 
+    code: 'en', 
+    name: 'English',
+    flag: '🇬🇧'
+  },
+  { 
+    code: 'pl', 
+    name: 'Polski',
+    flag: '🇵🇱'
+  }
 ];
 
 function getLocalizedPath(targetLocale: string) {
@@ -35,7 +43,7 @@ function getLocalizedPath(targetLocale: string) {
     {languages.map(({ code, name, flag }) => (
       <a
         href={code === currentLocale ? undefined : getLocalizedPath(code)}
-        class={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors duration-300 ${
+        class={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-300 ${
           currentLocale === code 
             ? 'bg-accent/10 text-accent font-medium pointer-events-none' 
             : 'text-slate hover:bg-slate/5'
@@ -43,7 +51,9 @@ function getLocalizedPath(targetLocale: string) {
         aria-label={`Switch to ${name}`}
         data-language-link="mobile"
       >
-        <span class="text-lg">{flag}</span>
+        <span class="w-6 h-6 rounded-full bg-slate/5 flex items-center justify-center text-lg shadow-sm">
+          {flag}
+        </span>
         <span>{name}</span>
         {currentLocale === code && (
           <svg class="w-4 h-4 ml-auto text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -59,11 +69,15 @@ function getLocalizedPath(targetLocale: string) {
     <button 
       type="button"
       id="desktopLanguageToggle"
-      class="flex items-center gap-2 px-4 py-2 rounded-lg bg-slate/5 hover:bg-slate/10 transition-colors duration-300"
+      class="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-slate/5 transition-all duration-300 group"
       aria-expanded="false"
     >
-      <span class="text-lg">{languages.find(l => l.code === currentLocale)?.flag}</span>
-      <span class="text-sm font-medium text-slate">{languages.find(l => l.code === currentLocale)?.name}</span>
+      <span class="w-6 h-6 rounded-full bg-slate/5 flex items-center justify-center text-lg shadow-sm">
+        {languages.find(l => l.code === currentLocale)?.flag}
+      </span>
+      <span class="text-sm font-medium text-slate group-hover:text-accent transition-colors duration-300">
+        {languages.find(l => l.code === currentLocale)?.name}
+      </span>
       <svg 
         class="w-4 h-4 text-slate/70 group-hover:text-accent transition-colors duration-300" 
         fill="none" 
@@ -76,18 +90,22 @@ function getLocalizedPath(targetLocale: string) {
 
     <div 
       id="desktopLanguageDropdown"
-      class="absolute right-0 mt-2 w-48 py-2 bg-white rounded-lg shadow-lg border border-slate/10 opacity-0 invisible translate-y-2 transition-all duration-300"
+      class="absolute right-0 mt-2 w-48 py-2 bg-white/90 backdrop-blur-sm rounded-lg shadow-lg border border-slate/10 opacity-0 invisible translate-y-2 transition-all duration-300"
     >
       {languages.map(({ code, name, flag }) => (
         <a
           href={code === currentLocale ? undefined : getLocalizedPath(code)}
-          class={`flex items-center gap-3 px-4 py-2 hover:bg-slate/5 transition-colors duration-300 ${
-            currentLocale === code ? 'text-accent font-medium pointer-events-none' : 'text-slate'
+          class={`flex items-center gap-3 px-4 py-2 hover:bg-slate/5 transition-all duration-300 ${
+            currentLocale === code 
+              ? 'text-accent font-medium pointer-events-none' 
+              : 'text-slate hover:text-accent'
           }`}
           aria-label={`Switch to ${name}`}
           data-language-link="desktop"
         >
-          <span class="text-lg">{flag}</span>
+          <span class="w-6 h-6 rounded-full bg-slate/5 flex items-center justify-center text-lg shadow-sm">
+            {flag}
+          </span>
           <span class="text-sm">{name}</span>
           {currentLocale === code && (
             <svg class="w-4 h-4 ml-auto text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -176,3 +194,11 @@ function getLocalizedPath(targetLocale: string) {
   // Re-initialize after view transitions
   document.addEventListener('astro:after-swap', initializeLanguageSwitcher);
 </script> 
+
+<style>
+  /* Add smooth hover effect for language flags */
+  [data-language-link]:hover .w-6 {
+    transform: scale(1.05);
+    transition: transform 0.2s ease-out;
+  }
+</style> 
