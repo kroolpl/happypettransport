@@ -125,8 +125,19 @@ const { isMobile = false } = Astro.props;
     const link = event.currentTarget as HTMLAnchorElement;
     if (link?.href) {
       event.preventDefault();
-      // Force a full page reload
-      window.location.href = link.href;
+      
+      // Set a loading state
+      document.documentElement.style.opacity = '0.5';
+      document.documentElement.style.transition = 'opacity 0.2s';
+      
+      // Update localStorage before navigation
+      const isPolish = link.href.includes('/pl');
+      localStorage.setItem('preferredLanguage', isPolish ? 'pl' : 'en');
+      
+      // Navigate after a brief delay
+      setTimeout(() => {
+        window.location.href = link.href;
+      }, 50);
     }
   }
 

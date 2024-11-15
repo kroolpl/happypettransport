@@ -141,36 +141,34 @@ function getLocalizedPath(targetLocale: string) {
     <title>{title}</title>
     <ViewTransitions />
 
-    <!-- Language detection and redirect script -->
+    <!-- Language detection script - moved to top of head -->
     <script>
-      // Only run on the homepage to avoid redirect loops
-      if (window.location.pathname === '/') {
-        // Get browser language
-        const browserLang = navigator.language.toLowerCase();
-        // Get stored preference if any
-        const storedLang = localStorage.getItem('preferredLanguage');
+      // Run this script as early as possible
+      (function() {
+        const currentPath = window.location.pathname;
         
-        // Function to check if we should show Polish version
-        function shouldShowPolish(lang) {
-          return lang.startsWith('pl');
+        // Only redirect if we're not already on the correct language path
+        if (currentPath === '/') {
+          const storedLang = localStorage.getItem('preferredLanguage');
+          const browserLang = navigator.language.toLowerCase();
+          const userLang = storedLang || browserLang;
+          
+          if (userLang.startsWith('pl')) {
+            window.location.replace('/pl');
+          }
         }
+      })();
+    </script>
 
-        // Use stored preference first, then browser language
-        const userLang = storedLang || browserLang;
-
-        // Redirect to Polish version if appropriate
-        if (shouldShowPolish(userLang) && !window.location.pathname.startsWith('/pl')) {
-          window.location.href = '/pl';
-        }
-      }
-
-      // Store language preference when user manually switches
+    <!-- Language switcher script -->
+    <script>
       document.addEventListener('astro:page-load', () => {
         const currentPath = window.location.pathname;
         const isPolish = currentPath.startsWith('/pl');
         localStorage.setItem('preferredLanguage', isPolish ? 'pl' : 'en');
       });
     </script>
+
     <link rel="alternate" hreflang="en" href={`https://yoursite.com${currentPath.replace(/^\/pl/, '')}`} />
     <link rel="alternate" hreflang="pl" href={`https://yoursite.com/pl${currentPath.replace(/^\/pl/, '')}`} />
     <meta http-equiv="content-language" content={currentLocale}>
