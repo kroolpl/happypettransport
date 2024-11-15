@@ -20,11 +20,11 @@ const contactOptions = [
 ---
 
 <!-- Fixed positioning with higher z-index and proper bottom spacing -->
-<div class="fixed bottom-20 right-4 z-[9999] block md:hidden">
+<div class="fixed bottom-20 right-4 z-[9999] block md:hidden animate-floating">
   <!-- Main Button -->
   <button
     id="contactToggle"
-    class="w-14 h-14 bg-accent rounded-full shadow-lg flex items-center justify-center text-white hover:bg-accent/90 transition-all duration-300"
+    class="w-14 h-14 bg-accent rounded-full shadow-lg flex items-center justify-center text-white hover:bg-accent/90 transition-all duration-300 animate-pulse-soft"
     aria-label="Contact options"
   >
     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -37,13 +37,17 @@ const contactOptions = [
     id="contactOptions" 
     class="absolute bottom-16 right-0 flex flex-col gap-3 scale-0 opacity-0 transition-all duration-300 origin-bottom-right"
   >
-    {contactOptions.map((option) => (
+    {contactOptions.map((option, index) => (
       <a
         href={option.url}
         target="_blank"
         rel="noopener noreferrer"
-        class={`w-12 h-12 ${option.color} rounded-full shadow-lg flex items-center justify-center text-white transform transition-all duration-300`}
+        class={`w-12 h-12 ${option.color} rounded-full shadow-lg flex items-center justify-center text-white transform transition-all duration-300 hover:scale-110`}
         aria-label={`Contact through ${option.name}`}
+        style={`animation: pop-up 0.3s ease-out forwards;
+                animation-delay: ${index * 0.1}s;
+                opacity: 0;
+                transform: scale(0) translateY(20px);`}
       >
         <Fragment set:html={option.icon} />
       </a>
@@ -67,9 +71,21 @@ const contactOptions = [
       if (show) {
         options.classList.remove('scale-0', 'opacity-0');
         options.classList.add('scale-100', 'opacity-100');
+        
+        // Animate each option with a delay
+        options.querySelectorAll('a').forEach((option, index) => {
+          option.style.animation = `pop-up 0.3s ease-out forwards ${index * 0.1}s`;
+        });
       } else {
         options.classList.add('scale-0', 'opacity-0');
         options.classList.remove('scale-100', 'opacity-100');
+        
+        // Reset animations
+        options.querySelectorAll('a').forEach(option => {
+          option.style.animation = '';
+          option.style.opacity = '0';
+          option.style.transform = 'scale(0) translateY(20px)';
+        });
       }
       
       isOpen = show;

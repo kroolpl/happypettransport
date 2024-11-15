@@ -24,8 +24,12 @@ export default {
           '50%': { transform: 'translateY(-10px)' },
         },
         'pulse-soft': {
-          '0%, 100%': { opacity: 1 },
-          '50%': { opacity: 0.8 },
+          '0%, 100%': { transform: 'scale(1)' },
+          '50%': { transform: 'scale(1.05)' },
+        },
+        'pop-up': {
+          '0%': { transform: 'scale(0) translateY(20px)', opacity: '0' },
+          '100%': { transform: 'scale(1) translateY(0)', opacity: '1' },
         },
         'slide-up': {
           '0%': { transform: 'translateY(10px)', opacity: 0 },
@@ -48,6 +52,8 @@ export default {
         'slide-up': 'slide-up 0.6s ease-out',
         'breath': 'breath 3s ease-in-out infinite',
         'driving': 'drive 3s ease-in-out infinite',
+        'floating': 'float 3s ease-in-out infinite',
+        'pop-up': 'pop-up 0.3s ease-out forwards',
       },
     },
   },
