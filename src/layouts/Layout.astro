@@ -8,7 +8,6 @@ import { Image } from 'astro:assets';
 import logo from '../assets/logo.svg';
 import FloatingContact from '../components/FloatingContact.astro';
 import FloatingHamburger from '../components/FloatingHamburger.astro';
-import type { ImageMetadata } from 'astro';
 
 interface Props {
   title: string;
@@ -133,15 +132,47 @@ function getLocalizedPath(targetLocale: string) {
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={currentLocale}>
   <head>
     <meta charset="UTF-8" />
     <meta name="description" content={description} />
     <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href={logo.src} />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
     <ViewTransitions />
+
+    <!-- Language detection script - moved to top of head -->
+    <script>
+      // Run this script as early as possible
+      (function() {
+        const currentPath = window.location.pathname;
+        
+        // Only redirect if we're not already on the correct language path
+        if (currentPath === '/') {
+          const storedLang = localStorage.getItem('preferredLanguage');
+          const browserLang = navigator.language.toLowerCase();
+          const userLang = storedLang || browserLang;
+          
+          if (userLang.startsWith('pl')) {
+            window.location.replace('/pl');
+          }
+        }
+      })();
+    </script>
+
+    <!-- Language switcher script -->
+    <script>
+      document.addEventListener('astro:page-load', () => {
+        const currentPath = window.location.pathname;
+        const isPolish = currentPath.startsWith('/pl');
+        localStorage.setItem('preferredLanguage', isPolish ? 'pl' : 'en');
+      });
+    </script>
+
+    <link rel="alternate" hreflang="en" href={`https://yoursite.com${currentPath.replace(/^\/pl/, '')}`} />
+    <link rel="alternate" hreflang="pl" href={`https://yoursite.com/pl${currentPath.replace(/^\/pl/, '')}`} />
+    <meta http-equiv="content-language" content={currentLocale}>
   </head>
   <body class="bg-slate/5 flex flex-col min-h-screen">
     <header class="bg-white shadow-sm fixed w-full top-0 z-50">
@@ -225,6 +256,7 @@ function getLocalizedPath(targetLocale: string) {
           </div>
           
           <div class="px-4 sm:px-6 py-8">
+            <!-- Navigation Links -->
             <div class="flex flex-col gap-6">
               {navLinks.map(({ href, label }) => (
                 <a 
@@ -242,6 +274,23 @@ function getLocalizedPath(targetLocale: string) {
             <div class="mt-8 pt-8 border-t border-slate/10">
               <p class="text-sm font-medium text-slate/70 mb-3">{t.chooseLanguage}</p>
               <LanguageSwitcher isMobile={true} />
+            </div>
+
+            <!-- Social Links -->
+            <div class="mt-8 pt-8 border-t border-slate/10">
+              <div class="flex gap-6">
+                {socialLinks.map((social) => (
+                  <a
+                    href={social.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class={`text-slate transition-all duration-300 ${social.hoverClass}`}
+                    aria-label={`Follow us on ${social.name}`}
+                  >
+                    <Fragment set:html={social.icon} />
+                  </a>
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -385,35 +434,57 @@ function getLocalizedPath(targetLocale: string) {
       // Cleanup before view transitions
       document.addEventListener('astro:before-swap', cleanup);
 
-      interface MobileMenuController {
-        toggle: (show: boolean) => void;
-      }
+      function initializeMobileMenu() {
+        const menuButton = document.getElementById('menuButton');
+        const closeMenu = document.getElementById('closeMenu');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const body = document.body;
 
-      declare global {
-        interface Window {
-          mobileMenuController: MobileMenuController;
+        function toggleMenu(show: boolean) {
+          if (!mobileMenu) return;
+          
+          if (show) {
+            mobileMenu.classList.remove('translate-x-full');
+            body.style.overflow = 'hidden';
+          } else {
+            mobileMenu.classList.add('translate-x-full');
+            body.style.overflow = '';
+          }
+        }
+
+        // Remove existing listeners first
+        menuButton?.removeEventListener('click', () => toggleMenu(true));
+        closeMenu?.removeEventListener('click', () => toggleMenu(false));
+
+        // Add new listeners
+        menuButton?.addEventListener('click', () => toggleMenu(true));
+        closeMenu?.addEventListener('click', () => toggleMenu(false));
+
+        // Close menu when clicking on mobile navigation links
+        const mobileLinks = mobileMenu?.getElementsByTagName('a');
+        if (mobileLinks) {
+          Array.from(mobileLinks).forEach(link => {
+            link.addEventListener('click', () => toggleMenu(false));
+          });
         }
       }
 
-      function toggleMenu(show: boolean) {
+      // Initialize on first load
+      initializeMobileMenu();
+
+      // Re-initialize after view transitions
+      document.addEventListener('astro:after-swap', initializeMobileMenu);
+
+      // Cleanup before view transitions
+      document.addEventListener('astro:before-swap', () => {
         const mobileMenu = document.getElementById('mobileMenu');
         const body = document.body;
         
-        if (!mobileMenu) return;
-        
-        if (show) {
-          mobileMenu.classList.remove('translate-x-full');
-          body.style.overflow = 'hidden';
-        } else {
+        if (mobileMenu) {
           mobileMenu.classList.add('translate-x-full');
           body.style.overflow = '';
         }
-      }
-
-      // Initialize the controller
-      window.mobileMenuController = {
-        toggle: toggleMenu
-      };
+      });
     </script>
     <FloatingContact />
     <FloatingHamburger />

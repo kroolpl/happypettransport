@@ -14,13 +14,30 @@
 <script>
   function initializeFloatingMenu() {
     const floatingButton = document.getElementById('floatingMenuButton');
+    const menuButton = document.getElementById('menuButton');
     const mobileMenu = document.getElementById('mobileMenu');
+    const body = document.body;
 
-    floatingButton?.addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
+    function toggleMenu(show: boolean) {
+      if (show) {
+        mobileMenu?.classList.remove('translate-x-full');
+        body.style.overflow = 'hidden';
+      } else {
+        mobileMenu?.classList.add('translate-x-full');
+        body.style.overflow = '';
+      }
+    }
+
+    // Handle floating button click
+    floatingButton?.addEventListener('click', () => {
       const isMenuHidden = mobileMenu?.classList.contains('translate-x-full');
-      (window as any).mobileMenuController?.toggle(isMenuHidden);
+      toggleMenu(isMenuHidden);
+    });
+
+    // Handle original menu button click
+    menuButton?.addEventListener('click', () => {
+      const isMenuHidden = mobileMenu?.classList.contains('translate-x-full');
+      toggleMenu(isMenuHidden);
     });
   }
 
