@@ -1,6 +1,7 @@
 ---
 import '@fontsource/poppins';
 import '@fontsource/open-sans';
+import '@fontsource/righteous';
 import { ViewTransitions } from 'astro:transitions';
 import LanguageSwitcher from '../components/LanguageSwitcher.astro';
 import { Image } from 'astro:assets';
@@ -128,30 +129,6 @@ function getLocalizedPath(targetLocale: string) {
           .replace('/contact', '/kontakt')}`;
   }
 }
-
-// Define critical fonts for preloading
-const criticalFonts = [
-  {
-    path: '/@fontsource/poppins/files/poppins-latin-400-normal.woff2',
-    type: 'font/woff2',
-    weight: '400'
-  },
-  {
-    path: '/@fontsource/poppins/files/poppins-latin-600-normal.woff2',
-    type: 'font/woff2',
-    weight: '600'
-  },
-  {
-    path: '/@fontsource/poppins/files/poppins-latin-700-normal.woff2',
-    type: 'font/woff2',
-    weight: '700'
-  },
-  {
-    path: '/@fontsource/open-sans/files/open-sans-latin-400-normal.woff2',
-    type: 'font/woff2',
-    weight: '400'
-  }
-];
 ---
 
 <!doctype html>
@@ -162,57 +139,40 @@ const criticalFonts = [
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href={logo.src} />
     <meta name="generator" content={Astro.generator} />
-    
-    <!-- Preload critical fonts -->
-    {criticalFonts.map((font) => (
-      <link
-        rel="preload"
-        href={font.path}
-        as="font"
-        type={font.type}
-        crossorigin="anonymous"
-      />
-    ))}
-
-    <!-- Font display strategy -->
-    <style is:inline>
-      /* Poppins font-face declarations */
-      @font-face {
-        font-family: 'Poppins';
-        src: url('/@fontsource/poppins/files/poppins-latin-400-normal.woff2') format('woff2');
-        font-weight: 400;
-        font-style: normal;
-        font-display: swap;
-      }
-      
-      @font-face {
-        font-family: 'Poppins';
-        src: url('/@fontsource/poppins/files/poppins-latin-600-normal.woff2') format('woff2');
-        font-weight: 600;
-        font-style: normal;
-        font-display: swap;
-      }
-
-      @font-face {
-        font-family: 'Poppins';
-        src: url('/@fontsource/poppins/files/poppins-latin-700-normal.woff2') format('woff2');
-        font-weight: 700;
-        font-style: normal;
-        font-display: swap;
-      }
-
-      /* Open Sans font-face declarations */
-      @font-face {
-        font-family: 'Open Sans';
-        src: url('/@fontsource/open-sans/files/open-sans-latin-400-normal.woff2') format('woff2');
-        font-weight: 400;
-        font-style: normal;
-        font-display: swap;
-      }
-    </style>
-
     <title>{title}</title>
     <ViewTransitions />
+
+    <!-- Language detection script - moved to top of head -->
+    <script>
+      // Run this script as early as possible
+      (function() {
+        const currentPath = window.location.pathname;
+        
+        // Only redirect if we're not already on the correct language path
+        if (currentPath === '/') {
+          const storedLang = localStorage.getItem('preferredLanguage');
+          const browserLang = navigator.language.toLowerCase();
+          const userLang = storedLang || browserLang;
+          
+          if (userLang.startsWith('pl')) {
+            window.location.replace('/pl');
+          }
+        }
+      })();
+    </script>
+
+    <!-- Language switcher script -->
+    <script>
+      document.addEventListener('astro:page-load', () => {
+        const currentPath = window.location.pathname;
+        const isPolish = currentPath.startsWith('/pl');
+        localStorage.setItem('preferredLanguage', isPolish ? 'pl' : 'en');
+      });
+    </script>
+
+    <link rel="alternate" hreflang="en" href={`https://yoursite.com${currentPath.replace(/^\/pl/, '')}`} />
+    <link rel="alternate" hreflang="pl" href={`https://yoursite.com/pl${currentPath.replace(/^\/pl/, '')}`} />
+    <meta http-equiv="content-language" content={currentLocale}>
   </head>
   <body class="bg-slate/5 flex flex-col min-h-screen">
     <header class="bg-white shadow-sm fixed w-full top-0 z-50">
@@ -296,7 +256,6 @@ const criticalFonts = [
           </div>
           
           <div class="px-4 sm:px-6 py-8">
-            <!-- Navigation Links -->
             <div class="flex flex-col gap-6">
               {navLinks.map(({ href, label }) => (
                 <a 
@@ -314,23 +273,6 @@ const criticalFonts = [
             <div class="mt-8 pt-8 border-t border-slate/10">
               <p class="text-sm font-medium text-slate/70 mb-3">{t.chooseLanguage}</p>
               <LanguageSwitcher isMobile={true} />
-            </div>
-
-            <!-- Social Links -->
-            <div class="mt-8 pt-8 border-t border-slate/10">
-              <div class="flex gap-6">
-                {socialLinks.map((social) => (
-                  <a
-                    href={social.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class={`text-slate transition-all duration-300 ${social.hoverClass}`}
-                    aria-label={`Follow us on ${social.name}`}
-                  >
-                    <Fragment set:html={social.icon} />
-                  </a>
-                ))}
-              </div>
             </div>
           </div>
         </div>
@@ -474,39 +416,38 @@ const criticalFonts = [
       // Cleanup before view transitions
       document.addEventListener('astro:before-swap', cleanup);
 
-      function initializeMenus() {
-        const navbarMenuButton = document.getElementById('menuButton');
-        const floatingMenuButton = document.getElementById('floatingMenuButton');
+      function toggleMenu(show: boolean) {
         const mobileMenu = document.getElementById('mobileMenu');
         const body = document.body;
-
-        function toggleMenu(show: boolean) {
-          if (!mobileMenu) return;
-          
-          if (show) {
-            mobileMenu.classList.remove('translate-x-full');
-            body.style.overflow = 'hidden';
-          } else {
-            mobileMenu.classList.add('translate-x-full');
-            body.style.overflow = '';
-          }
+        
+        if (!mobileMenu) return;
+        
+        if (show) {
+          mobileMenu.classList.remove('translate-x-full');
+          body.style.overflow = 'hidden';
+        } else {
+          mobileMenu.classList.add('translate-x-full');
+          body.style.overflow = '';
         }
+      }
 
-        // Handle navbar menu button
-        navbarMenuButton?.addEventListener('click', () => {
-          const isMenuHidden = mobileMenu?.classList.contains('translate-x-full');
-          toggleMenu(isMenuHidden);
-        });
-
-        // Handle floating menu button
-        floatingMenuButton?.addEventListener('click', () => {
-          const isMenuHidden = mobileMenu?.classList.contains('translate-x-full');
-          toggleMenu(isMenuHidden);
-        });
-
-        // Handle close button in mobile menu
+      function initializeMobileMenu() {
+        const menuButton = document.getElementById('menuButton');
         const closeMenu = document.getElementById('closeMenu');
-        closeMenu?.addEventListener('click', () => {
+        const mobileMenu = document.getElementById('mobileMenu');
+
+        // Handle menu button click
+        menuButton?.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const isMenuHidden = mobileMenu?.classList.contains('translate-x-full');
+          toggleMenu(isMenuHidden);
+        });
+
+        // Handle close button click
+        closeMenu?.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
           toggleMenu(false);
         });
 
@@ -517,48 +458,31 @@ const criticalFonts = [
             link.addEventListener('click', () => toggleMenu(false));
           });
         }
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (event) => {
+          if (mobileMenu && !mobileMenu.contains(event.target as Node) && 
+              menuButton && !menuButton.contains(event.target as Node)) {
+            toggleMenu(false);
+          }
+        });
       }
 
       // Initialize on first load
-      initializeMenus();
+      initializeMobileMenu();
 
       // Re-initialize after view transitions
-      document.addEventListener('astro:after-swap', initializeMenus);
+      document.addEventListener('astro:after-swap', initializeMobileMenu);
 
       // Cleanup before view transitions
       document.addEventListener('astro:before-swap', () => {
-        const mobileMenu = document.getElementById('mobileMenu');
-        const body = document.body;
-        
-        if (mobileMenu) {
-          mobileMenu.classList.add('translate-x-full');
-          body.style.overflow = '';
-        }
+        toggleMenu(false);
       });
+
+      // Make toggleMenu available globally
+      window.toggleMobileMenu = toggleMenu;
     </script>
     <FloatingContact />
     <FloatingHamburger />
-    <script>
-      // Font loading with fallback strategy
-      if ("fonts" in document) {
-        const light = new FontFace(
-          "Poppins",
-          "url(/@fontsource/poppins/files/poppins-latin-400-normal.woff2)",
-          { weight: "400" }
-        );
-        
-        const bold = new FontFace(
-          "Poppins",
-          "url(/@fontsource/poppins/files/poppins-latin-600-normal.woff2)",
-          { weight: "600" }
-        );
-
-        Promise.all([light.load(), bold.load()]).then((fonts) => {
-          fonts.forEach((font) => {
-            document.fonts.add(font);
-          });
-        });
-      }
-    </script>
   </body>
 </html>

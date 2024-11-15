@@ -13,5 +13,20 @@ export default defineConfig({
       SVG: true,
       Logger: 1
     })
-  ]
+  ],
+  i18n: {
+    defaultLocale: "en",
+    locales: ["en", "pl"],
+    routing: {
+      prefixDefaultLocale: false
+    }
+  },
+  viewTransitions: {
+    defaultAnimation: {
+      name: 'fade',
+      duration: '0.2s',
+      easing: 'ease-out',
+      fillMode: 'both'
+    }
+  }
 });
