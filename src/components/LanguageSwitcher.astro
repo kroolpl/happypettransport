@@ -1,4 +1,10 @@
 ---
+interface Props {
+  isMobile?: boolean;
+}
+
+const { isMobile = false } = Astro.props;
+
 const currentPath = Astro.url.pathname;
 const currentLocale = currentPath.startsWith('/pl') ? 'pl' : 'en';
 
@@ -23,41 +29,22 @@ function getLocalizedPath(targetLocale: string) {
 }
 ---
 
-<!-- Desktop Language Switcher -->
-<div class="relative group">
-  <button 
-    id="languageToggle"
-    class="flex items-center gap-2 px-4 py-2 rounded-lg bg-slate/5 hover:bg-slate/10 transition-colors duration-300"
-    aria-expanded="false"
-  >
-    <span class="text-lg">{languages.find(l => l.code === currentLocale)?.flag}</span>
-    <span class="text-sm font-medium text-slate">{languages.find(l => l.code === currentLocale)?.name}</span>
-    <svg 
-      class="w-4 h-4 text-slate/70 group-hover:text-accent transition-colors duration-300" 
-      fill="none" 
-      viewBox="0 0 24 24" 
-      stroke="currentColor"
-    >
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-    </svg>
-  </button>
-
-  <!-- Dropdown -->
-  <div 
-    id="languageDropdown"
-    class="absolute right-0 mt-2 w-48 py-2 bg-white rounded-lg shadow-lg border border-slate/10 opacity-0 invisible translate-y-2 transition-all duration-300"
-  >
+{isMobile ? (
+  <!-- Mobile Language Switcher -->
+  <div class="space-y-1">
     {languages.map(({ code, name, flag }) => (
       <a
         href={code === currentLocale ? undefined : getLocalizedPath(code)}
-        class={`flex items-center gap-3 px-4 py-2 hover:bg-slate/5 transition-colors duration-300 ${
-          currentLocale === code ? 'text-accent font-medium pointer-events-none' : 'text-slate'
+        class={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors duration-300 ${
+          currentLocale === code 
+            ? 'bg-accent/10 text-accent font-medium pointer-events-none' 
+            : 'text-slate hover:bg-slate/5'
         }`}
         aria-label={`Switch to ${name}`}
-        data-language-link
+        data-language-link="mobile"
       >
         <span class="text-lg">{flag}</span>
-        <span class="text-sm">{name}</span>
+        <span>{name}</span>
         {currentLocale === code && (
           <svg class="w-4 h-4 ml-auto text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
@@ -66,19 +53,84 @@ function getLocalizedPath(targetLocale: string) {
       </a>
     ))}
   </div>
-</div>
+) : (
+  <!-- Desktop Language Switcher -->
+  <div class="relative">
+    <button 
+      type="button"
+      id="desktopLanguageToggle"
+      class="flex items-center gap-2 px-4 py-2 rounded-lg bg-slate/5 hover:bg-slate/10 transition-colors duration-300"
+      aria-expanded="false"
+    >
+      <span class="text-lg">{languages.find(l => l.code === currentLocale)?.flag}</span>
+      <span class="text-sm font-medium text-slate">{languages.find(l => l.code === currentLocale)?.name}</span>
+      <svg 
+        class="w-4 h-4 text-slate/70 group-hover:text-accent transition-colors duration-300" 
+        fill="none" 
+        viewBox="0 0 24 24" 
+        stroke="currentColor"
+      >
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+      </svg>
+    </button>
+
+    <div 
+      id="desktopLanguageDropdown"
+      class="absolute right-0 mt-2 w-48 py-2 bg-white rounded-lg shadow-lg border border-slate/10 opacity-0 invisible translate-y-2 transition-all duration-300"
+    >
+      {languages.map(({ code, name, flag }) => (
+        <a
+          href={code === currentLocale ? undefined : getLocalizedPath(code)}
+          class={`flex items-center gap-3 px-4 py-2 hover:bg-slate/5 transition-colors duration-300 ${
+            currentLocale === code ? 'text-accent font-medium pointer-events-none' : 'text-slate'
+          }`}
+          aria-label={`Switch to ${name}`}
+          data-language-link="desktop"
+        >
+          <span class="text-lg">{flag}</span>
+          <span class="text-sm">{name}</span>
+          {currentLocale === code && (
+            <svg class="w-4 h-4 ml-auto text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+          )}
+        </a>
+      ))}
+    </div>
+  </div>
+)}
 
 <script>
-  function initializeLanguageSwitcher() {
-    const toggle = document.getElementById('languageToggle');
-    const dropdown = document.getElementById('languageDropdown');
+  function handleLanguageSwitch(event: Event) {
+    const link = event.currentTarget as HTMLAnchorElement;
+    if (link?.href) {
+      event.preventDefault();
+      
+      // Set a loading state
+      document.documentElement.style.opacity = '0.5';
+      document.documentElement.style.transition = 'opacity 0.2s';
+      
+      // Update localStorage before navigation
+      const isPolish = link.href.includes('/pl');
+      localStorage.setItem('preferredLanguage', isPolish ? 'pl' : 'en');
+      
+      // Navigate after a brief delay
+      setTimeout(() => {
+        window.location.href = link.href;
+      }, 50);
+    }
+  }
+
+  function initializeDesktopLanguageSwitcher() {
+    const toggle = document.getElementById('desktopLanguageToggle');
+    const dropdown = document.getElementById('desktopLanguageDropdown');
     let isOpen = false;
 
+    if (!toggle || !dropdown) return;
+
     function toggleDropdown(show: boolean) {
-      if (!toggle || !dropdown) return;
-      
       isOpen = show;
-      toggle.setAttribute('aria-expanded', show.toString());
+      toggle?.setAttribute('aria-expanded', show.toString());
       
       if (show) {
         dropdown.classList.remove('opacity-0', 'invisible', 'translate-y-2');
@@ -89,47 +141,32 @@ function getLocalizedPath(targetLocale: string) {
       }
     }
 
-    // Toggle dropdown on button click
-    toggle?.addEventListener('click', (e) => {
+    toggle.addEventListener('click', (e) => {
       e.stopPropagation();
       toggleDropdown(!isOpen);
     });
 
-    // Handle language selection
-    const languageLinks = document.querySelectorAll('[data-language-link]');
-    languageLinks.forEach(link => {
-      link.addEventListener('click', (e) => {
-        e.preventDefault();
-        const target = e.currentTarget as HTMLAnchorElement;
-        if (target?.href) {
-          // Set a loading state
-          document.documentElement.style.opacity = '0.5';
-          document.documentElement.style.transition = 'opacity 0.2s';
-          
-          // Update localStorage before navigation
-          const isPolish = target.href.includes('/pl');
-          localStorage.setItem('preferredLanguage', isPolish ? 'pl' : 'en');
-          
-          // Navigate after a brief delay
-          setTimeout(() => {
-            window.location.href = target.href;
-          }, 50);
-        }
-      });
-    });
-
-    // Close when clicking outside
     document.addEventListener('click', (e) => {
-      if (isOpen && toggle && !toggle.contains(e.target as Node) && dropdown && !dropdown.contains(e.target as Node)) {
+      if (isOpen && !toggle.contains(e.target as Node) && !dropdown.contains(e.target as Node)) {
         toggleDropdown(false);
       }
     });
 
-    // Close when pressing Escape
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && isOpen) {
         toggleDropdown(false);
       }
+    });
+  }
+
+  function initializeLanguageSwitcher() {
+    // Initialize desktop dropdown
+    initializeDesktopLanguageSwitcher();
+
+    // Add click handlers to all language links
+    document.querySelectorAll('[data-language-link]').forEach(link => {
+      link.removeEventListener('click', handleLanguageSwitch);
+      link.addEventListener('click', handleLanguageSwitch);
     });
   }
 
