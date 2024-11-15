@@ -6,6 +6,7 @@ import { ViewTransitions } from 'astro:transitions';
 import LanguageSwitcher from '../components/LanguageSwitcher.astro';
 import { Image } from 'astro:assets';
 import logo from '../assets/logo.svg';
+import FloatingContact from '../components/FloatingContact.astro';
 
 interface Props {
   title: string;
@@ -481,5 +482,6 @@ function getLocalizedPath(targetLocale: string) {
         }
       });
     </script>
+    <FloatingContact />
   </body>
 </html>
