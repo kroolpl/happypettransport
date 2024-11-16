@@ -228,7 +228,8 @@ function getLocalizedPath(targetLocale: string) {
 
         <!-- Original Menu Button -->
         <button
-          id="menuButton"
+          type="button"
+          id="navbarMenuButton"
           class="lg:hidden relative group p-2 rounded-lg transition-colors duration-300 hover:bg-slate/5"
           aria-label="Toggle menu"
         >
@@ -245,7 +246,8 @@ function getLocalizedPath(targetLocale: string) {
           <div class="h-20 px-4 sm:px-6 flex items-center justify-between border-b border-slate/10">
             <span class="font-heading text-2xl font-bold text-accent">{t.menu}</span>
             <button
-              id="closeMenu"
+              type="button"
+              id="closeMenuButton"
               class="text-slate hover:text-accent transition-colors duration-300"
               aria-label="Close menu"
             >
@@ -397,95 +399,78 @@ function getLocalizedPath(targetLocale: string) {
     </footer>
 
     <script>
-      // Function to handle language switching
-      function handleLanguageSwitch(event: Event) {
-        const link = event.currentTarget as HTMLAnchorElement;
-        if (link?.href) {
-          event.preventDefault();
-          // Force a full page reload instead of using view transitions
-          window.location.href = link.href;
+      class MobileMenuManager {
+        private menu: HTMLElement | null;
+        private body: HTMLElement;
+        private isOpen: boolean;
+
+        constructor() {
+          this.menu = document.getElementById('mobileMenu');
+          this.body = document.body;
+          this.isOpen = false;
+          this.initialize();
         }
-      }
 
-      // Function to initialize language switcher
-      function initializeLanguageSwitcher() {
-        // Add click handlers to all language switcher links
-        document.querySelectorAll('[data-language-link]').forEach(link => {
-          // Remove existing listeners first to prevent duplicates
-          link.removeEventListener('click', handleLanguageSwitch);
-          // Add new listener
-          link.addEventListener('click', handleLanguageSwitch);
-        });
-      }
+        private initialize() {
+          // Navbar menu button
+          document.getElementById('navbarMenuButton')?.addEventListener('click', () => this.toggle());
 
-      // Initialize on first load
-      initializeLanguageSwitcher();
+          // Close button
+          document.getElementById('closeMenuButton')?.addEventListener('click', () => this.close());
 
-      // Re-initialize after view transitions
-      document.addEventListener('astro:after-swap', initializeLanguageSwitcher);
+          // Floating menu button
+          document.getElementById('floatingMenuButton')?.addEventListener('click', () => this.toggle());
 
-      // Cleanup function
-      function cleanup() {
-        document.querySelectorAll('[data-language-link]').forEach(link => {
-          link.removeEventListener('click', handleLanguageSwitch);
-        });
-      }
+          // Close when clicking menu links
+          this.menu?.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => this.close());
+          });
 
-      // Cleanup before view transitions
-      document.addEventListener('astro:before-swap', cleanup);
+          // Close when clicking outside
+          document.addEventListener('click', (event) => {
+            const target = event.target as HTMLElement;
+            if (this.isOpen && 
+                this.menu && 
+                !this.menu.contains(target) && 
+                !target.closest('#navbarMenuButton') && 
+                !target.closest('#floatingMenuButton')) {
+              this.close();
+            }
+          });
+        }
 
-      function initializeMobileMenu() {
-        const menuButton = document.getElementById('menuButton');
-        const closeMenu = document.getElementById('closeMenu');
-        const mobileMenu = document.getElementById('mobileMenu');
-        const body = document.body;
-
-        function toggleMenu(show: boolean) {
-          if (!mobileMenu) return;
-          
-          if (show) {
-            mobileMenu.classList.remove('translate-x-full');
-            body.style.overflow = 'hidden';
+        public toggle() {
+          if (this.isOpen) {
+            this.close();
           } else {
-            mobileMenu.classList.add('translate-x-full');
-            body.style.overflow = '';
+            this.open();
           }
         }
 
-        // Remove existing listeners first
-        menuButton?.removeEventListener('click', () => toggleMenu(true));
-        closeMenu?.removeEventListener('click', () => toggleMenu(false));
+        public open() {
+          if (!this.menu) return;
+          this.menu.classList.remove('translate-x-full');
+          this.body.style.overflow = 'hidden';
+          this.isOpen = true;
+        }
 
-        // Add new listeners
-        menuButton?.addEventListener('click', () => toggleMenu(true));
-        closeMenu?.addEventListener('click', () => toggleMenu(false));
-
-        // Close menu when clicking on mobile navigation links
-        const mobileLinks = mobileMenu?.getElementsByTagName('a');
-        if (mobileLinks) {
-          Array.from(mobileLinks).forEach(link => {
-            link.addEventListener('click', () => toggleMenu(false));
-          });
+        public close() {
+          if (!this.menu) return;
+          this.menu.classList.add('translate-x-full');
+          this.body.style.overflow = '';
+          this.isOpen = false;
         }
       }
 
-      // Initialize on first load
-      initializeMobileMenu();
+      // Initialize on page load
+      let menuManager = new MobileMenuManager();
 
       // Re-initialize after view transitions
-      document.addEventListener('astro:after-swap', initializeMobileMenu);
-
-      // Cleanup before view transitions
-      document.addEventListener('astro:before-swap', () => {
-        const mobileMenu = document.getElementById('mobileMenu');
-        const body = document.body;
-        
-        if (mobileMenu) {
-          mobileMenu.classList.add('translate-x-full');
-          body.style.overflow = '';
-        }
+      document.addEventListener('astro:after-swap', () => {
+        menuManager = new MobileMenuManager();
       });
     </script>
+
     <FloatingContact />
     <FloatingHamburger />
   </body>
